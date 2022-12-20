@@ -883,12 +883,13 @@ client.on("messageCreate", (message) => {
 // ======================================================== //
 
 client.on("messageCreate", (message) => {
+  // ALL RESOURCES ARE FROM RESOURCES.JSON FILE
+
   // Recommend Algorithm resources
   if (
     message.content === "algorithm resources" ||
     message.content === "algo resources"
   ) {
-    // pull in resources from json file & randmoize
     let algoResources = [];
     let nestedAlgoResources = resources[0].algorithms;
 
@@ -896,7 +897,7 @@ client.on("messageCreate", (message) => {
       algoResources.push(nestedAlgoResources[i]);
       console.log(algoResources);
     }
-    // map through each link into the message.reply
+
     algoResources.map((resource) => {
       message.reply(
         `Here are some resources to help you learn algorithms: ${resource}`
@@ -916,7 +917,7 @@ client.on("messageCreate", (message) => {
       dsaResources.push(nestedDsaResources[i]);
       console.log(dsaResources);
     }
-    // map through each link into the message.reply
+
     dsaResources.map((resource) => {
       message.reply(
         `Here are some resources to help you learn data structures: ${resource}`
@@ -930,16 +931,36 @@ client.on("messageCreate", (message) => {
     message.content === "reactjs resources" ||
     message.content === "react.js resources"
   ) {
-    message.reply(
-      "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr"
-    );
+    let reactResources = [];
+    let nestedReactResources = resources[2].react;
+
+    for (let i = 0; i < nestedReactResources.length; i++) {
+      reactResources.push(nestedReactResources[i]);
+      console.log(reactResources);
+    }
+
+    reactResources.map((resource) => {
+      message.reply(
+        `Here are some resources to help you learn React: ${resource}`
+      );
+    });
   }
 
   // Recommend React Native resources
   if (message.content === "react native resources") {
-    message.reply(
-      "https://www.youtube.com/watch?v=Ke90Tje7VS0 \n https://www.youtube.com/watch?v=DLX62G4lc44 \n https://www.youtube.com/watch?v=DLX62G4lc44"
-    );
+    let reactNativeResources = [];
+    let nestedReactNativeResources = resources[3].reactNative;
+
+    for (let i = 0; i < nestedReactNativeResources.length; i++) {
+      reactNativeResources.push(nestedReactNativeResources[i]);
+      console.log(reactNativeResources);
+    }
+
+    reactNativeResources.map((resource) => {
+      message.reply(
+        `Here are some resources to help you learn React Native: ${resource}`
+      );
+    });
   }
 
   // Recommend Node.js resources
@@ -949,9 +970,19 @@ client.on("messageCreate", (message) => {
     message.content === "node.js resources" ||
     message.content === "node resources"
   ) {
-    message.reply(
-      "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr"
-    );
+    let nodeResources = [];
+    let nestedNodeResources = resources[4].node;
+
+    for (let i = 0; i < nestedNodeResources.length; i++) {
+      nodeResources.push(nestedNodeResources[i]);
+      console.log(nodeResources);
+    }
+
+    nodeResources.map((resource) => {
+      message.reply(
+        `Here are some resources to help you learn Node.js: ${resource}`
+      );
+    });
   }
 
   // Recommend HTML/CSS resources
@@ -962,9 +993,19 @@ client.on("messageCreate", (message) => {
     message.content === "html resources" ||
     message.content === "css resources"
   ) {
-    message.reply(
-      "https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi"
-    );
+    let htmlCssResources = [];
+    let nestedHtmlCssResources = resources[5].htmlCss;
+
+    for (let i = 0; i < nestedHtmlCssResources.length; i++) {
+      htmlCssResources.push(nestedHtmlCssResources[i]);
+      console.log(htmlCssResources);
+    }
+
+    htmlCssResources.map((resource) => {
+      message.reply(
+        `Here are some resources to help you learn HTML/CSS: ${resource}`
+      );
+    });
   }
 
   // Recommend JavaScript resources
@@ -972,22 +1013,52 @@ client.on("messageCreate", (message) => {
     message.content === "javascript resources" ||
     message.content === "js resources"
   ) {
-    message.reply(
-      "https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi"
-    );
+    let jsResources = [];
+    let nestedJsResources = resources[6].javascript;
+
+    for (let i = 0; i < nestedJsResources.length; i++) {
+      jsResources.push(nestedJsResources[i]);
+      console.log(jsResources);
+    }
+
+    jsResources.map((resource) => {
+      message.reply(
+        `Here are some resources to help you learn JavaScript: ${resource}`
+      );
+    });
   }
 
   // Recommend Python resources
   if (message.content === "python resources") {
-    message.reply(
-      "https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi"
-    );
+    let pythonResources = [];
+    let nestedPythonResources = resources[7].python;
+
+    for (let i = 0; i < nestedPythonResources.length; i++) {
+      pythonResources.push(nestedPythonResources[i]);
+      console.log(pythonResources);
+    }
+
+    pythonResources.map((resource) => {
+      message.reply(
+        `Here are some resources to help you learn Python: ${resource}`
+      );
+    });
   }
 
   // Recommend AI resources
   if (message.content === "ai resources") {
-    message.reply(
-      "Check out these resources: https://www.coursera.org/learn/machine-learning https://www.coursera.org/learn/convolutional-neural-networks https://www.coursera.org/learn/natural-language-processing-tensorflow https://www.coursera.org/learn/ai-for-everyone"
-    );
+    let aiResources = [];
+    let nestedAiResources = resources[8].ai;
+
+    for (let i = 0; i < nestedAiResources.length; i++) {
+      aiResources.push(nestedAiResources[i]);
+      console.log(aiResources);
+    }
+
+    aiResources.map((resource) => {
+      message.reply(
+        `Here are some resources to help you learn AI: ${resource}`
+      );
+    });
   }
 });
