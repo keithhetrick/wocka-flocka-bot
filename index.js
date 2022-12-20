@@ -18,10 +18,16 @@ const fortunes = require("./jsonFiles/fortune.json");
 const eightBall = require("./jsonFiles/8ball.json");
 const quotes = require("./jsonFiles/quotes.json");
 const facts = require("./jsonFiles/facts.json");
+const resources = require("./jsonFiles/resources.json");
 
 // API keys
 const WEATHER_API_KEY = process.env.OPEN_WEATHER_API_KEY;
-const IP_API_KEY = process.env.IP_GEOLOCATION_API_KEY;
+// const IP_API_KEY = process.env.IP_GEOLOCATION_API_KEY;
+const IPIFY_API_KEY = process.env.IPIFY_API_KEY;
+
+// .env info
+const DISCORD_SERVER_ID = process.env.DISCORD_SERVER_ID;
+const TOKEN = process.env.TOKEN;
 
 const client = new Client({
   intents: [
@@ -38,46 +44,6 @@ client.on("ready", () => {
 client.on("messageDelete", (message) => {
   message.channel.send("Stop deleting messages!");
 });
-
-// Reactions & user moding added
-const BOT_PREFIX = "!";
-const MOD_ME_COMMAND = "mod-me";
-const MODERATOR = "1029029727933055006";
-
-client.on("messageCreate", (message) => {
-  // covert all text inputs to lowercase
-  const msg = message.content.toLowerCase();
-
-  // "ping" command
-  if (message.content === "ping") {
-    message.reply("pong");
-  }
-
-  // "I love you my fellow humans!" command
-  if (msg == "I love you my fellow humans!") {
-    message.react("🚀");
-    message.react("❤️");
-  }
-
-  // "Who is the best bot?" command
-  if (msg === "Who is the best bot?") {
-    message.reply("Wocka-Flocka is the best bot! 😉😂🚀");
-  }
-
-  // Mod user command
-  if (msg === `${BOT_PREFIX}${MOD_ME_COMMAND}`) {
-    modUser(message.member);
-  }
-
-  // undo "mod-me" command (remove moderator role)
-  if (msg === `!un${MOD_ME_COMMAND}`) {
-    message.member.roles.remove(MODERATOR);
-  }
-});
-
-function modUser(member) {
-  member.roles.add(MODERATOR);
-}
 
 // Embeded Help message
 const helpMessageEmbed = {
@@ -221,7 +187,7 @@ const helpMessageEmbed = {
     icon_url: "https://i.imgur.com/AfFp7pu.png",
   },
 };
-const channel = client.channels.cache.get("1028135751508033676");
+const channel = client.channels.cache.get(DISCORD_SERVER_ID);
 // channel.send({ embeds: [helpMessageEmbed] });
 
 // call the !help command to get a list of commands
@@ -323,7 +289,7 @@ client.on("messageCreate", (message) => {
   }
 });
 
-client.login(process.env.TOKEN);
+client.login(TOKEN);
 
 // ======================================================== //
 // ======================================================== //
@@ -335,7 +301,7 @@ client.login(process.env.TOKEN);
 // create manually welcome command for below message
 // client.on("guildMemberAdd", (member) => {
 //   member.guild.channels.cache
-//     .get("1028135751508033676")
+//     .get(DISCORD_SERVER_ID)
 //     .send(`Welcome to the server, ${member}`);
 // });
 
@@ -370,7 +336,7 @@ client.login(process.env.TOKEN);
 // });
 
 // client.on("guildMemberAdd", (member) => {
-//   member.guild.channels.cache.get("1028135751508033676").send({
+//   member.guild.channels.cache.get(DISCORD_SERVER_ID).send({
 //     embeds: [
 //       {
 //         title: `Welcome to the server, ${member}`,
@@ -437,7 +403,7 @@ client.on("messageCreate", (message) => {
   // Get list of members in the server
   if (msg === "Get list of current members") {
     // fetch all current members in the server
-    const list = client.guilds.cache.get("1028135751508033676");
+    const list = client.guilds.cache.get(DISCORD_SERVER_ID);
 
     list.members.cache.forEach((member) => {
       console.log(member.user.username);
@@ -470,19 +436,36 @@ client.on("messageCreate", (message) => {
     const diceRoll1 = Math.floor(Math.random() * 6) + 1;
     const diceRoll2 = Math.floor(Math.random() * 6) + 1;
     const randomNumber = diceRoll1 + diceRoll2;
-    if (randomNumber === 1) {
-      message.reply("Snake eyes 👁 You rolled a 1");
-    } else if (randomNumber === 2) {
-      message.reply("Tutu 🩰 You rolled a 2");
+
+    // message that shows both dice rolls
+    if (randomNumber === 2) {
+      message.reply(
+        `Tutu 🩰! You rolled a ${diceRoll1} and a ${diceRoll2}, which makes ${randomNumber}!`
+      );
+    } else if (randomNumber === 3) {
+      message.reply(
+        `Craps 🎲! You rolled a ${diceRoll1} and a ${diceRoll2}, which makes ${randomNumber}`
+      );
     } else if (randomNumber === 11) {
-      message.reply("Yo! You rolled a 11 🎲");
+      message.reply(
+        `Yo! You rolled a ${diceRoll1} and a ${diceRoll2}, which makes ${randomNumber} 🎲`
+      );
     } else if (randomNumber === 12) {
-      message.reply("Box cars 🎲 You rolled a 12");
+      message.reply(
+        `Box cars 🎲! You rolled a ${diceRoll1} and a ${diceRoll2}, which makes ${randomNumber}!`
+      );
     } else if (randomNumber === 7) {
-      message.reply("Lucky 7 🍀 You rolled a 7");
+      message.reply(
+        `Lucky number 7 🍀! You rolled a ${diceRoll1} and a ${diceRoll2}, which makes ${randomNumber}!`
+      );
     } else if (randomNumber === 9) {
-      message.reply("Bang bang 🔫 Jesse James's .45, You rolled 9");
-    } else message.reply(`You rolled a ${randomNumber}`);
+      message.reply(
+        `Bang bang, Jesse James 🔫 You rolled a ${diceRoll1} and a ${diceRoll2}, which makes ${randomNumber}`
+      );
+    } else
+      message.reply(
+        `You rolled a ${diceRoll1} and a ${diceRoll2}, which makes ${randomNumber}`
+      );
   }
 
   // "8ball" command
@@ -518,7 +501,7 @@ client.on("messageCreate", (message) => {
   }
 
   // "Rock, paper, scissors" command
-  if (msg === "rock, paper, scissors") {
+  if (msg === "rock paper scissors") {
     const rockPaperScissors = Math.floor(Math.random() * 3) + 1;
     if (rockPaperScissors === 1) {
       message.reply("Rock 🪨");
@@ -537,7 +520,8 @@ client.on("messageCreate", (message) => {
     if (
       randomQuote.quoteAuthor === undefined ||
       randomQuote.quoteAuthor === "" ||
-      randomQuote.quoteAuthor === null
+      randomQuote.quoteAuthor === null ||
+      randomQuote.quoteAuthor === " "
     ) {
       randomQuote.quoteAuthor = "Unknown";
     }
@@ -675,7 +659,7 @@ client.on("messageCreate", (message) => {
 
   // ======================================================== //
   // ======================================================== //
-  // TIME ZONES, WEATHER & LOCATION
+  // TIME ZONES
   // ======================================================== //
   // ======================================================== //
 
@@ -688,64 +672,106 @@ client.on("messageCreate", (message) => {
     message.reply(`Today is ${month}/${date}/${year}`);
   }
 
-  // get time in EST
-  if (msg === "what time is it in EST") {
-    const estTime = new Date().toLocaleString("en-US", {
-      timeZone: "America/New_York",
+  // get current time based on AM & PM in 00:00 format
+  if (msg === "what time is it") {
+    const today = new Date();
+    const time = today.toLocaleString("en-US", {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
     });
-    message.reply(`It is currently ${estTime} in EST`);
+    message.reply(`It is currently ${time}`);
   }
 
-  // get time in CST
-  if (msg === "what time is it in CST") {
-    const cstTime = new Date().toLocaleString("en-US", {
-      timeZone: "America/Chicago",
-    });
-    message.reply(`It is currently ${cstTime} in CST`);
-  }
+  // ======================================================== //
+  // ======================================================== //
+  // WEATHER & LOCATION
+  // ======================================================== //
+  // ======================================================== //
 
-  // get time in PST
-  if (msg === "what time is it in PST") {
-    const pstTime = new Date().toLocaleString("en-US", {
-      timeZone: "America/Los_Angeles",
-    });
-    message.reply(`It is currently ${pstTime} in PST`);
-  }
-
-  // get time in MST
-  if (msg === "what time is it in MST") {
-    const mstTime = new Date().toLocaleString("en-US", {
-      timeZone: "America/Denver",
-    });
-    message.reply(`It is currently ${mstTime} in MST`);
-  }
-
-  // show users ip address in a message
   if (msg === "where is my ip address located") {
+    const user = message.author;
+
+    // axios GET request to ipify API from authors local ip address(not host) as location
+    // use "user" instead of "message" to get local ip address
+    // send a axios request to users computer to get their ip address
+    // axios.get("https://geolocation-db.com/json/").then((res) => {
+    //   console.log(res.data);
+    //   const setIP = res.data.IPv4;
+    //   const setCity = res.data.city;
+    //   const setState = res.data.state;
+    //   const setCountry = res.data.country_name;
+    //   const setLatitude = res.data.latitude;
+    //   const setLongitude = res.data.longitude;
+    //   message.reply(
+    //     `Hello ${user}, Your IP address is located in ${setCity}, ${setState}, ${setCountry} at ${setLatitude}, ${setLongitude}`
+    //   );
+    // });
+
     axios
-      .get(`https://ipgeolocation.abstractapi.com/v1/?api_key=${IP_API_KEY}`)
+      .get(
+        `https://geo.ipify.org/api/v2/country,city?apiKey=${IPIFY_API_KEY}`,
+        {
+          params: { user },
+        }
+      )
       .then((response) => {
-        console.log(response.data);
+        // stringify response object
+        console.log("IP RESPONSE DATA: " + JSON.stringify(response.data));
+        console.log("USER: " + user);
+        // console.log("IP RESPONSE DATA: " + response.data);
+        const ip = response.data.ip;
+        const city = response.data.location.city;
+        const country = response.data.location.country;
         message.reply(
-          `Your IP address is located in ${response.data.city}, ${response.data.region}, ${response.data.country}`
+          `Hello ${user}, our IP address is ${ip}, and is located in ${city}, ${country}`
         );
       })
       .catch((error) => {
         console.log(error);
       });
+
+    // // for ip address ONLY
+    // axios
+    //   .get(`https://api.ipify.org?format=json`)
+    //   .then((response) => {
+    //     console.log("IP RESPONSE DATA: " + response.data.ip);
+    //     const ip = response.data.ip;
+    //     message.reply(`Your IP address is ${ip} and it is located in ${ip}`);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
   }
 
   // Current weather by user's location
   if (msg === "what is the weather like") {
+    const user = message.author;
+
+    // axios
+    //   .get(`https://ipgeolocation.abstractapi.com/v1/?api_key=${IP_API_KEY}`)
+    //   .then((response) => {
+    //     console.log("LOCATION RESPONSE DATA: " + response.data.city);
+    //     const city = response.data.city;
+    //     const region = response.data.region;
+    //     const country = response.data.country;
+    //     const latitude = response.data.latitude;
+    //     const longitude = response.data.longitude;
     axios
-      .get(`https://ipgeolocation.abstractapi.com/v1/?api_key=${IP_API_KEY}`)
+      .get(
+        `https://geo.ipify.org/api/v2/country,city?apiKey=${IPIFY_API_KEY}`,
+        {
+          params: { user },
+        }
+      )
       .then((response) => {
-        console.log("LOCATION RESPONSE DATA: " + response.data.city);
-        const city = response.data.city;
-        const region = response.data.region;
-        const country = response.data.country;
-        const latitude = response.data.latitude;
-        const longitude = response.data.longitude;
+        console.log("IP RESPONSE DATA: " + JSON.stringify(response.data));
+        const ip = response.data.ip;
+        const city = response.data.location.city;
+        const region = response.data.location.region;
+        const country = response.data.location.country;
+        const latitude = response.data.location.lat;
+        const longitude = response.data.location.lng;
         axios
           .get(
             `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${WEATHER_API_KEY}&units=imperial`
@@ -763,7 +789,7 @@ client.on("messageCreate", (message) => {
             const currentHumidity = response.data.main.humidity;
             const currentClouds = response.data.clouds.all;
             message.reply(
-              `The current weather in ${city}, ${region}, ${country} is: ${currentWeatherMain} & ${currentWeatherDescription}, with a temperature of ${currentTemp} °F and a real-feel of ${currentFeelsLike} °F. The wind speed is ${currentWindSpeed} MPH with a humidity of ${currentHumidity}% and a cloudiness of ${currentClouds}%. `
+              `The current weather in ${city}, ${region}, ${country} is: ${currentWeatherMain}/${currentWeatherDescription}, with a temperature of ${currentTemp} °F and a real-feel of ${currentFeelsLike} °F. The wind speed is ${currentWindSpeed} MPH with a humidity of ${currentHumidity}% and a cloudiness of ${currentClouds}%. `
             );
           })
           .catch((error) => {
@@ -837,20 +863,6 @@ client.on("messageCreate", (message) => {
     message.reply(`Your user ID is: ${user.id}`);
   }
 
-  // Get user's status
-  if (msg === "get my status") {
-    if (user.presence.status === "online") {
-      message.reply("You are online, duh!");
-    } else if (user.presence.status === "idle") {
-      message.reply("You are idle. So sad.");
-    } else if (user.presence.status === "dnd") {
-      message.reply("Looks like you are busy.");
-    } else if (user.presence.status === "offline") {
-      message.reply("You are offline. Get back to work!");
-    }
-    message.reply(user.presence.status);
-  }
-
   // Get user's nickname
   if (msg === "get my nickname") {
     if (!user.nickname) {
@@ -871,66 +883,109 @@ client.on("messageCreate", (message) => {
 // ======================================================== //
 
 client.on("messageCreate", (message) => {
-  const msg = message.content.toLowerCase();
-
   // Recommend Algorithm resources
-  if (msg === "Recommend Algorithm resources") {
-    message.reply(
-      "https://www.youtube.com/watch?v=0IAPZzGSbME \n https://www.youtube.com/watch?v=9RHO6jU--GU \n https://www.youtube.com/watch?v=Qk0zUZW-U_M"
-    );
+  if (
+    message.content === "algorithm resources" ||
+    message.content === "algo resources"
+  ) {
+    // pull in resources from json file & randmoize
+    let algoResources = [];
+    let nestedAlgoResources = resources[0].algorithms;
+
+    for (let i = 0; i < nestedAlgoResources.length; i++) {
+      algoResources.push(nestedAlgoResources[i]);
+      console.log(algoResources);
+    }
+    // map through each link into the message.reply
+    algoResources.map((resource) => {
+      message.reply(
+        `Here are some resources to help you learn algorithms: ${resource}`
+      );
+    });
   }
 
   // Recommend Data Structures resources
-  if (msg === "Recommend Data Structures resources") {
-    message.reply(
-      "https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi"
-    );
+  if (
+    message.content === "data structures resources" ||
+    message.content === "dsa resources"
+  ) {
+    let dsaResources = [];
+    let nestedDsaResources = resources[1].dataStructures;
+
+    for (let i = 0; i < nestedDsaResources.length; i++) {
+      dsaResources.push(nestedDsaResources[i]);
+      console.log(dsaResources);
+    }
+    // map through each link into the message.reply
+    dsaResources.map((resource) => {
+      message.reply(
+        `Here are some resources to help you learn data structures: ${resource}`
+      );
+    });
   }
 
   // Recommend React resources
-  if (msg === "Recommend React resources") {
+  if (
+    message.content === "react resources" ||
+    message.content === "reactjs resources" ||
+    message.content === "react.js resources"
+  ) {
     message.reply(
       "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr"
     );
   }
 
   // Recommend React Native resources
-  if (msg === "Recommend React resources") {
+  if (message.content === "react native resources") {
     message.reply(
       "https://www.youtube.com/watch?v=Ke90Tje7VS0 \n https://www.youtube.com/watch?v=DLX62G4lc44 \n https://www.youtube.com/watch?v=DLX62G4lc44"
     );
   }
 
   // Recommend Node.js resources
-  if (msg === "Recommend Node.js resources") {
+  if (
+    message.content === "node.js resources" ||
+    message.content === "nodejs resources" ||
+    message.content === "node.js resources" ||
+    message.content === "node resources"
+  ) {
     message.reply(
       "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr"
     );
   }
 
   // Recommend HTML/CSS resources
-  if (msg === "Recommend HTML/CSS resources") {
+  if (
+    message.content === "HTML/CSS resources" ||
+    message.content === "html/css" ||
+    message.content === "html/css resources" ||
+    message.content === "html resources" ||
+    message.content === "css resources"
+  ) {
     message.reply(
       "https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi"
     );
   }
 
   // Recommend JavaScript resources
-  if (msg === "Recommend JavaScript resources") {
+  if (
+    message.content === "javascript resources" ||
+    message.content === "js resources"
+  ) {
     message.reply(
       "https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi"
     );
   }
 
   // Recommend Python resources
-  if (msg === "Recommend Python resources") {
+  if (message.content === "python resources") {
     message.reply(
       "https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi"
     );
   }
 
   // Recommend AI resources
-  if (msg === "Recommend AI resources") {
+  if (message.content === "ai resources") {
     message.reply(
       "Check out these resources: https://www.coursera.org/learn/machine-learning https://www.coursera.org/learn/convolutional-neural-networks https://www.coursera.org/learn/natural-language-processing-tensorflow https://www.coursera.org/learn/ai-for-everyone"
     );
