@@ -25,6 +25,8 @@ const insults = require("./jsonFiles/insults.json");
 const compliments = require("./jsonFiles/compliments.json");
 const words = require("./jsonFiles/words.json");
 const dictionary = require("./jsonFiles/dictionary.json");
+const coffee = require("./jsonFiles/coffeeGif.json");
+const memes = require("./jsonFiles/memes.json");
 
 // .env & API keys
 const WEATHER_API_KEY = process.env.OPEN_WEATHER_API_KEY;
@@ -289,6 +291,7 @@ const resourceMessageEmbeded = {
 
 // call the !resources command to get a list of commands
 client.on("messageCreate", async (message) => {
+  // regex any non-alphanumeric character like spaces, commas, etc.
   const msg = message.content.toLowerCase();
 
   if (msg === "!resources") {
@@ -305,7 +308,7 @@ client.on("messageCreate", async (message) => {
 let conversation = [];
 
 client.on("messageCreate", (message) => {
-  const msg = message.content.toLowerCase();
+  const msg = message.content.toLowerCase().replace(/[^a-z0-9\s]/gi, "");
 
   if (message.author.bot) return false;
   if (message.mentions.has(client.user.id)) {
@@ -395,7 +398,7 @@ client.login(TOKEN);
 
 // show username in welcome message
 client.on("messageCreate", (message) => {
-  const msg = message.content.toLowerCase();
+  const msg = message.content.toLowerCase().replace(/[^a-z0-9\s]/gi, "");
 
   if (msg === "!welcome") {
     message.reply({
@@ -455,7 +458,7 @@ client.on("messageCreate", (message) => {
 // ======================================================== //
 
 client.on("messageCreate", (message) => {
-  const msg = message.content.toLowerCase();
+  const msg = message.content.toLowerCase().replace(/[^a-z0-9\s]/gi, "");
 
   // "Pick a number" command
   if (msg === "pick a number") {
@@ -545,7 +548,6 @@ client.on("messageCreate", (message) => {
   }
 
   // "pick a card" generator
-
   const suits = {
     1: "Spades",
     2: "Diamonds",
@@ -715,7 +717,16 @@ client.on("messageCreate", (message) => {
 
   // "coffee" command
   if (msg === "coffee") {
-    message.reply("https://media.giphy.com/media/ceeFbVxiZzMBi/giphy.gif");
+    const randomCoffee = coffee[Math.floor(Math.random() * coffee.length)];
+    message.reply(randomCoffee);
+  }
+
+  // "memes"command
+  if (msg === "memes") {
+    // memes come from memes.json file
+    const randomMeme = memes[Math.floor(Math.random() * memes.length)];
+    console.log(randomMeme.img);
+    message.reply(randomMeme.img);
   }
 
   // ======================================================== //
@@ -907,6 +918,7 @@ client.on("messageCreate", (message) => {
         // stringify response object
         console.log("IP RESPONSE DATA: " + JSON.stringify(response.data));
         console.log("USER: " + user);
+        console.log("IP: " + response.data.ip);
         // console.log("IP RESPONSE DATA: " + response.data);
         const ip = response.data.ip;
         const city = response.data.location.city;
@@ -937,7 +949,9 @@ client.on("messageCreate", (message) => {
     msg === "what is the weather like" ||
     msg === "what is the weather" ||
     msg === "whats the weather like" ||
-    msg === "whats the weather"
+    msg === "whats the weather" ||
+    msg === "hows the weather" ||
+    msg === "how is the weather"
   ) {
     const user = message.author;
 
@@ -994,9 +1008,6 @@ client.on("messageCreate", (message) => {
       });
   }
 
-  // Automate Quote of the day that happens every 24 hours at 9am that message.replies using node-schedule & quotes.json
-  const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-
   // Option 1
   // schedule.scheduleJob("*/5 * * * *", function () {
   //   if (
@@ -1013,13 +1024,29 @@ client.on("messageCreate", (message) => {
   // });
 
   // Option 2
-  const rule = new schedule.RecurrenceRule();
-  rule.dayOfWeek = [0, new schedule.Range(0, 6)];
-  rule.hour = 9;
-  rule.minute = 0;
-  rule.tz = "America/New_York";
+  // const rule = new schedule.RecurrenceRule();
+  // rule.dayOfWeek = [0, new schedule.Range(0, 6)];
+  // rule.hour = 9;
+  // rule.minute = 0;
+  // rule.tz = "America/New_York";
 
-  schedule.scheduleJob(rule, function () {
+  // schedule.scheduleJob(rule, function () {
+  //   if (
+  //     randomQuote.quoteAuthor === undefined ||
+  //     randomQuote.quoteAuthor === "" ||
+  //     randomQuote.quoteAuthor === null ||
+  //     randomQuote.quoteAuthor === " "
+  //   ) {
+  //     randomQuote.quoteAuthor = "Unknown";
+  //   }
+  //   message.reply(
+  //     `Quote of the day: "${randomQuote.quoteText}" - ${randomQuote.quoteAuthor}`
+  //   );
+  // });
+
+  // Option 3
+  const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+  schedule.scheduleJob("0 9 * * 0-6", function () {
     if (
       randomQuote.quoteAuthor === undefined ||
       randomQuote.quoteAuthor === "" ||
@@ -1041,7 +1068,7 @@ client.on("messageCreate", (message) => {
 // ======================================================== //
 
 client.on("messageCreate", (message) => {
-  const msg = message.content.toLowerCase();
+  const msg = message.content.toLowerCase().replace(/[^a-z0-9\s]/gi, "");
   const user = message.author;
 
   // Get user's avatar
@@ -1084,7 +1111,7 @@ client.on("messageCreate", (message) => {
 // ======================================================== //
 
 client.on("messageCreate", (message) => {
-  const msg = message.content.toLowerCase();
+  const msg = message.content.toLowerCase().replace(/[^a-z0-9\s]/gi, "");
 
   // ALL RESOURCES ARE FROM RESOURCES.JSON FILE
 
