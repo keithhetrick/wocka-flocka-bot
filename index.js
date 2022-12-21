@@ -8,9 +8,10 @@
 */
 
 const cleverbot = require("cleverbot-free");
-const { Client, GatewayIntentBits, EmbedBuilder } = require("discord.js");
+const { Client, GatewayIntentBits } = require("discord.js");
 require("dotenv").config();
 const axios = require("axios");
+const schedule = require("node-schedule");
 
 // JSON files
 const jokes = require("./jsonFiles/jokes.json");
@@ -691,7 +692,7 @@ client.on("messageCreate", (message) => {
   // ======================================================== //
   // ======================================================== //
 
-  if (msg === "where is my ip address located") {
+  if (msg === "where is my ip location") {
     const user = message.author;
 
     // axios GET request to ipify API from authors local ip address(not host) as location
@@ -803,36 +804,44 @@ client.on("messageCreate", (message) => {
       });
   }
 
-  // // Automate Quote of the day that happens every 24 hours
-  // const schedule = require("node-schedule");
-  // const rule = new schedule.RecurrenceRule();
-  // rule.hour = 0;
-  // rule.minute = 0;
-  // rule.second = 0;
-  // const job = schedule.scheduleJob(rule, function () {
-  //   const quoteOfTheDay = quotes[Math.floor(Math.random() * quotes.length)];
-  //   client.channels.cache
-  //     .get("CHANNEL ID")
-  //     .send(`"${quoteOfTheDay.quoteText}" - ${quoteOfTheDay.quoteAuthor}`);
+  // Automate Quote of the day that happens every 24 hours at 9am that message.replies using node-schedule & quotes.json
+  const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+
+  // Option 1
+  // schedule.scheduleJob("*/5 * * * *", function () {
+  //   if (
+  //     randomQuote.quoteAuthor === undefined ||
+  //     randomQuote.quoteAuthor === "" ||
+  //     randomQuote.quoteAuthor === null ||
+  //     randomQuote.quoteAuthor === " "
+  //   ) {
+  //     randomQuote.quoteAuthor = "Unknown";
+  //   }
+  //   message.reply(
+  //     `Quote of the day: "${randomQuote.quoteText}" - ${randomQuote.quoteAuthor}`
+  //   );
   // });
 
-  // // Alt automated quote of the day
-  // const quoteOfTheDay = () => {
-  //   const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-  //   return randomQuote;
-  // };
+  // Option 2
+  const rule = new schedule.RecurrenceRule();
+  rule.dayOfWeek = [0, new schedule.Range(0, 6)];
+  rule.hour = 9;
+  rule.minute = 0;
+  rule.tz = "America/New_York";
 
-  // // set up schedule for quote of the day
-  // const schedule = require("node-schedule");
-  // const rule = new schedule.RecurrenceRule();
-  // rule.dayOfWeek = [0, new schedule.Range(0, 6)];
-  // rule.hour = 0;
-  // rule.minute = 0;
-
-  // schedule.scheduleJob(rule, function () {
-  //   console.log("The answer to life, the universe, and everything!");
-  //   client.channels.cache.get("CHANNEL_ID").send(quoteOfTheDay());
-  // });
+  schedule.scheduleJob(rule, function () {
+    if (
+      randomQuote.quoteAuthor === undefined ||
+      randomQuote.quoteAuthor === "" ||
+      randomQuote.quoteAuthor === null ||
+      randomQuote.quoteAuthor === " "
+    ) {
+      randomQuote.quoteAuthor = "Unknown";
+    }
+    message.reply(
+      `Quote of the day: "${randomQuote.quoteText}" - ${randomQuote.quoteAuthor}`
+    );
+  });
 });
 
 // ======================================================== //
@@ -885,21 +894,13 @@ client.on("messageCreate", (message) => {
 // ======================================================== //
 
 client.on("messageCreate", (message) => {
+  const msg = message.content.toLowerCase();
+
   // ALL RESOURCES ARE FROM RESOURCES.JSON FILE
 
   // Recommend Algorithm resources
-  if (
-    message.content === "algorithm resources" ||
-    message.content === "algo resources"
-  ) {
-    let algoResources = [];
-    let nestedAlgoResources = resources[0].algorithms;
-
-    for (let i = 0; i < nestedAlgoResources.length; i++) {
-      algoResources.push(nestedAlgoResources[i]);
-      console.log(algoResources);
-    }
-
+  if (msg === "algorithm resources" || msg === "algo resources") {
+    let algoResources = resources[0].algorithms;
     algoResources.map((resource) => {
       message.reply(
         `Here are some resources to help you learn algorithms: ${resource}`
@@ -908,18 +909,8 @@ client.on("messageCreate", (message) => {
   }
 
   // Recommend Data Structures resources
-  if (
-    message.content === "data structures resources" ||
-    message.content === "dsa resources"
-  ) {
-    let dsaResources = [];
-    let nestedDsaResources = resources[1].dataStructures;
-
-    for (let i = 0; i < nestedDsaResources.length; i++) {
-      dsaResources.push(nestedDsaResources[i]);
-      console.log(dsaResources);
-    }
-
+  if (msg === "data structures resources" || msg === "dsa resources") {
+    let dsaResources = resources[1].dataStructures;
     dsaResources.map((resource) => {
       message.reply(
         `Here are some resources to help you learn data structures: ${resource}`
@@ -929,18 +920,11 @@ client.on("messageCreate", (message) => {
 
   // Recommend React resources
   if (
-    message.content === "react resources" ||
-    message.content === "reactjs resources" ||
-    message.content === "react.js resources"
+    msg === "react resources" ||
+    msg === "reactjs resources" ||
+    msg === "react.js resources"
   ) {
-    let reactResources = [];
-    let nestedReactResources = resources[2].react;
-
-    for (let i = 0; i < nestedReactResources.length; i++) {
-      reactResources.push(nestedReactResources[i]);
-      console.log(reactResources);
-    }
-
+    let reactResources = resources[2].react;
     reactResources.map((resource) => {
       message.reply(
         `Here are some resources to help you learn React: ${resource}`
@@ -949,15 +933,8 @@ client.on("messageCreate", (message) => {
   }
 
   // Recommend React Native resources
-  if (message.content === "react native resources") {
-    let reactNativeResources = [];
-    let nestedReactNativeResources = resources[3].reactNative;
-
-    for (let i = 0; i < nestedReactNativeResources.length; i++) {
-      reactNativeResources.push(nestedReactNativeResources[i]);
-      console.log(reactNativeResources);
-    }
-
+  if (msg === "react native resources") {
+    let reactNativeResources = resources[3].reactNative;
     reactNativeResources.map((resource) => {
       message.reply(
         `Here are some resources to help you learn React Native: ${resource}`
@@ -967,19 +944,12 @@ client.on("messageCreate", (message) => {
 
   // Recommend Node.js resources
   if (
-    message.content === "node.js resources" ||
-    message.content === "nodejs resources" ||
-    message.content === "node.js resources" ||
-    message.content === "node resources"
+    msg === "node.js resources" ||
+    msg === "nodejs resources" ||
+    msg === "node.js resources" ||
+    msg === "node resources"
   ) {
-    let nodeResources = [];
-    let nestedNodeResources = resources[4].node;
-
-    for (let i = 0; i < nestedNodeResources.length; i++) {
-      nodeResources.push(nestedNodeResources[i]);
-      console.log(nodeResources);
-    }
-
+    let nodeResources = resources[4].node;
     nodeResources.map((resource) => {
       message.reply(
         `Here are some resources to help you learn Node.js: ${resource}`
@@ -989,20 +959,13 @@ client.on("messageCreate", (message) => {
 
   // Recommend HTML/CSS resources
   if (
-    message.content === "HTML/CSS resources" ||
-    message.content === "html/css" ||
-    message.content === "html/css resources" ||
-    message.content === "html resources" ||
-    message.content === "css resources"
+    msg === "HTML/CSS resources" ||
+    msg === "html/css" ||
+    msg === "html/css resources" ||
+    msg === "html resources" ||
+    msg === "css resources"
   ) {
-    let htmlCssResources = [];
-    let nestedHtmlCssResources = resources[5].htmlCss;
-
-    for (let i = 0; i < nestedHtmlCssResources.length; i++) {
-      htmlCssResources.push(nestedHtmlCssResources[i]);
-      console.log(htmlCssResources);
-    }
-
+    let htmlCssResources = resources[5].htmlCss;
     htmlCssResources.map((resource) => {
       message.reply(
         `Here are some resources to help you learn HTML/CSS: ${resource}`
@@ -1011,18 +974,8 @@ client.on("messageCreate", (message) => {
   }
 
   // Recommend JavaScript resources
-  if (
-    message.content === "javascript resources" ||
-    message.content === "js resources"
-  ) {
-    let jsResources = [];
-    let nestedJsResources = resources[6].javascript;
-
-    for (let i = 0; i < nestedJsResources.length; i++) {
-      jsResources.push(nestedJsResources[i]);
-      console.log(jsResources);
-    }
-
+  if (msg === "javascript resources" || msg === "js resources") {
+    let jsResources = resources[6].javascript;
     jsResources.map((resource) => {
       message.reply(
         `Here are some resources to help you learn JavaScript: ${resource}`
@@ -1031,15 +984,8 @@ client.on("messageCreate", (message) => {
   }
 
   // Recommend Python resources
-  if (message.content === "python resources") {
-    let pythonResources = [];
-    let nestedPythonResources = resources[7].python;
-
-    for (let i = 0; i < nestedPythonResources.length; i++) {
-      pythonResources.push(nestedPythonResources[i]);
-      console.log(pythonResources);
-    }
-
+  if (msg === "python resources") {
+    let pythonResources = resources[7].python;
     pythonResources.map((resource) => {
       message.reply(
         `Here are some resources to help you learn Python: ${resource}`
@@ -1048,15 +994,8 @@ client.on("messageCreate", (message) => {
   }
 
   // Recommend AI resources
-  if (message.content === "ai resources") {
-    let aiResources = [];
-    let nestedAiResources = resources[8].ai;
-
-    for (let i = 0; i < nestedAiResources.length; i++) {
-      aiResources.push(nestedAiResources[i]);
-      console.log(aiResources);
-    }
-
+  if (msg === "ai resources") {
+    let aiResources = resources[8].ai;
     aiResources.map((resource) => {
       message.reply(
         `Here are some resources to help you learn AI: ${resource}`
