@@ -275,6 +275,8 @@ client.on("messageCreate", async (message) => {
 let conversation = [];
 
 client.on("messageCreate", (message) => {
+  const msg = message.content.toLowerCase();
+
   if (message.author.bot) return false;
   if (message.mentions.has(client.user.id)) {
     let text = msg;
