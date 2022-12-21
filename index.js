@@ -20,13 +20,16 @@ const eightBall = require("./jsonFiles/8ball.json");
 const quotes = require("./jsonFiles/quotes.json");
 const facts = require("./jsonFiles/facts.json");
 const resources = require("./jsonFiles/resources.json");
+const devFacts = require("./jsonFiles/devFacts.json");
+const insults = require("./jsonFiles/insults.json");
+const compliments = require("./jsonFiles/compliments.json");
+const words = require("./jsonFiles/words.json");
+const dictionary = require("./jsonFiles/dictionary.json");
 
-// API keys
+// .env & API keys
 const WEATHER_API_KEY = process.env.OPEN_WEATHER_API_KEY;
 // const IP_API_KEY = process.env.IP_GEOLOCATION_API_KEY;
 const IPIFY_API_KEY = process.env.IPIFY_API_KEY;
-
-// .env info
 const DISCORD_SERVER_ID = process.env.DISCORD_SERVER_ID;
 const TOKEN = process.env.TOKEN;
 
@@ -118,6 +121,32 @@ const helpMessageEmbed = {
     {
       name: "pick a number",
       value: "Wocka-Flocka can't pick your nose, but it can pick a number",
+      inline: true,
+    },
+    {
+      name: "random word",
+      value: "Wocka-Flocka will give you a random word",
+      inline: true,
+    },
+    {
+      name: "random insult",
+      value: "Wocka-Flocka will give you a random insult",
+      inline: true,
+    },
+    {
+      name: "random compliment",
+      value: "Wocka-Flocka will give you a random compliment",
+      inline: true,
+    },
+    {
+      name: "random developer fact",
+      value: "Wocka-Flocka will give you a random developer fact",
+      inline: true,
+    },
+    {
+      name: "define",
+      value: "Wocka-Flocka will define a word for you",
+      inline: true,
     },
     {
       name: "\u200b",
@@ -515,7 +544,76 @@ client.on("messageCreate", (message) => {
     }
   }
 
-  // share inspirational quote
+  // "pick a card" generator
+
+  const suits = {
+    1: "Spades",
+    2: "Diamonds",
+    3: "Clubs",
+    4: "Hearts",
+  };
+
+  if (msg === "pick a card") {
+    // generate a random number between 1 and 52
+    const randomCard = Math.floor(Math.random() * 52) + 1;
+    // generate a random suit
+    const randomSuit = Math.floor(Math.random() * 4) + 1;
+    // generate a random card value
+    const randomCardValue = Math.floor(Math.random() * 13) + 1;
+
+    // use randomCard & randomSuit & randomCardValue to generate a random card
+
+    // if the random card value is 1, it's an Ace
+    if (randomCardValue === 1) {
+      message.reply(`Your random card is the Ace of ${suits[randomSuit]}`);
+    }
+    // if the random card value is 11, it's a Jack
+    else if (randomCardValue === 11) {
+      message.reply(`Your random card is the Jack of ${suits[randomSuit]}`);
+    }
+    // if the random card value is 12, it's a Queen
+    else if (randomCardValue === 12) {
+      message.reply(`Your random card is the Queen of ${suits[randomSuit]}`);
+    }
+    // if the random card value is 13, it's a King
+    else if (randomCardValue === 13) {
+      message.reply(`Your random card is the King of ${suits[randomSuit]}`);
+    }
+    // if the random card value is anything else, it's a numbered card
+    else {
+      message.reply(
+        `Your random card is the ${randomCardValue} of ${suits[randomSuit]}`
+      );
+    }
+  }
+
+  // "guess a number" game
+  if (msg === "guess a number") {
+    // generate a random number between 1 and 10
+    const randomNumber = Math.floor(Math.random() * 10) + 1;
+    // send the number to the user
+    message.reply(
+      `I'm thinking of a number between 1 and 10. Try to guess it!`
+    );
+    // collect user input & compare it to the random number
+    const filter = (m) => m.author.id === message.author.id;
+    message.channel
+      .awaitMessages(filter, { max: 1, time: 15000 })
+      .then((collected) => {
+        if (collected.first().content === randomNumber.toString()) {
+          message.reply("You guessed it! You win!");
+        } else {
+          message.reply(
+            `Nope, the number I was thinking of was ${randomNumber}`
+          );
+        }
+      })
+      .catch((collected) => {
+        message.reply("You didn't guess in time! Try again later!");
+      });
+  }
+
+  // "inspirational quote" command
   if (msg === "inspirational quote") {
     // quotes come from json file
     const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
@@ -531,11 +629,93 @@ client.on("messageCreate", (message) => {
     message.reply(`"${randomQuote.quoteText}" - ${randomQuote.quoteAuthor}`);
   }
 
-  // random fact generator
+  // "random fact" generator
   if (msg === "random fact") {
     // facts come from json file
     const randomFact = facts[Math.floor(Math.random() * facts.length)];
     message.reply(randomFact);
+  }
+
+  // "random dev fact" generator
+  if (msg === "random dev fact") {
+    // devFacts come from json file
+    const randomDevFact = devFacts[Math.floor(Math.random() * devFacts.length)];
+    message.reply(`Did you know? ${randomDevFact}`);
+  }
+
+  // "random word" generator
+  if (msg === "random word") {
+    // words come from json file
+    const randomWord = words[Math.floor(Math.random() * words.length)];
+    message.reply(`I pick the word...${randomWord}!`);
+  }
+
+  // "random insult" generator
+  if (msg === "random insult") {
+    // insults come from json file
+    const randomInsult = insults[Math.floor(Math.random() * insults.length)];
+    message.reply(randomInsult);
+  }
+
+  // "random compliment" generator
+  if (msg === "random compliment") {
+    // compliments come from json file
+    const randomCompliment =
+      compliments[Math.floor(Math.random() * compliments.length)];
+    message.reply(randomCompliment);
+  }
+
+  // define a word using dictionary.JSON
+  if (msg.startsWith("define")) {
+    const word = msg.slice(7).trim();
+    const definition = dictionary[word];
+    const prefixMessage = `The definition of ${word} is: \n\n`;
+
+    if (
+      word === undefined ||
+      word === "" ||
+      word === null ||
+      word.length === 0
+    ) {
+      message.reply("Sorry, enter a different word!");
+    }
+    if (dictionary[word] === undefined) {
+      message.reply(`Sorry, I don't know the definition of ${word}!`);
+    }
+    if (msg === "define") {
+      message.reply("Sorry, enter a different word!");
+    }
+    if (
+      definition === undefined ||
+      definition === "" ||
+      definition === null ||
+      definition.length === undefined
+    ) {
+      message.reply(`Sorry, I don't know the definition of ${word}!`);
+    }
+    if (definition.length <= 2000) {
+      message.reply(prefixMessage + definition);
+    } else {
+      const messageLength = parseInt(prefixMessage.length);
+      const firstMessage = definition.substring(0, 2000 - messageLength);
+      const secondMessage = definition.substring(2000);
+      const standardMessage = prefixMessage + firstMessage;
+
+      message.reply(standardMessage);
+
+      if (definition.length > 2000 || secondMessage.length <= 2000) {
+        message.reply(
+          `The definition of ${word} is too long! Here's a link to the definition: https://www.merriam-webster.com/dictionary/${word}`
+        );
+      } else {
+        message.reply(secondMessage);
+      }
+    }
+  }
+
+  // "coffee" command
+  if (msg === "coffee") {
+    message.reply("https://media.giphy.com/media/ceeFbVxiZzMBi/giphy.gif");
   }
 
   // ======================================================== //
@@ -667,7 +847,7 @@ client.on("messageCreate", (message) => {
   // ======================================================== //
 
   // get current date
-  if (msg === "what is the date") {
+  if (msg === "what is the date" || msg === "whats the date") {
     const today = new Date();
     const date = today.getDate();
     const month = today.getMonth() + 1;
@@ -692,7 +872,12 @@ client.on("messageCreate", (message) => {
   // ======================================================== //
   // ======================================================== //
 
-  if (msg === "where is my ip location") {
+  if (
+    msg === "where is my ip location" ||
+    msg === "where am i" ||
+    msg === "where is my location" ||
+    msg === "whats my location"
+  ) {
     const user = message.author;
 
     // axios GET request to ipify API from authors local ip address(not host) as location
@@ -748,7 +933,12 @@ client.on("messageCreate", (message) => {
   }
 
   // Current weather by user's location
-  if (msg === "what is the weather like") {
+  if (
+    msg === "what is the weather like" ||
+    msg === "what is the weather" ||
+    msg === "whats the weather like" ||
+    msg === "whats the weather"
+  ) {
     const user = message.author;
 
     // axios
