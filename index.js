@@ -887,7 +887,8 @@ client.on("messageCreate", (message) => {
     msg === "where is my ip location" ||
     msg === "where am i" ||
     msg === "where is my location" ||
-    msg === "whats my location"
+    msg === "whats my location" ||
+    msg === "wheres my location"
   ) {
     const user = message.author;
 
