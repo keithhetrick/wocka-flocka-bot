@@ -725,8 +725,24 @@ client.on("messageCreate", (message) => {
   if (msg === "memes") {
     // memes come from memes.json file
     const randomMeme = memes[Math.floor(Math.random() * memes.length)];
-    console.log(randomMeme.img);
-    message.reply(randomMeme.img);
+    console.log(randomMeme.image);
+    message.reply(randomMeme.image);
+  }
+
+  // message.reply with a short story response form the url https://shortstories-api.onrender.com
+  if (msg === "short story" || msg === "tell me a story") {
+    fetch("https://shortstories-api.onrender.com/")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        let story = data.story;
+        let title = data.title;
+        let author = data.author;
+        let moral = data.moral;
+        message.reply(
+          `${title} by ${author} \n\n ${story} \n\nMoral: ${moral}`
+        );
+      });
   }
 
   // ======================================================== //
