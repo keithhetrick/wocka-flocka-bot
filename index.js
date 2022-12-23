@@ -51,17 +51,33 @@ client.on("messageDelete", (message) => {
   message.channel.send("Stop deleting messages!");
 });
 
+// ======================================================== //
+// ======================================================== //
+/*
+███████╗███╗   ███╗██████╗ ███████╗██████╗     ███╗   ███╗███████╗███████╗███████╗ █████╗  ██████╗ ███████╗███████╗
+██╔════╝████╗ ████║██╔══██╗██╔════╝██╔══██╗    ████╗ ████║██╔════╝██╔════╝██╔════╝██╔══██╗██╔════╝ ██╔════╝██╔════╝
+█████╗  ██╔████╔██║██████╔╝█████╗  ██║  ██║    ██╔████╔██║█████╗  ███████╗███████╗███████║██║  ███╗█████╗  ███████╗
+██╔══╝  ██║╚██╔╝██║██╔══██╗██╔══╝  ██║  ██║    ██║╚██╔╝██║██╔══╝  ╚════██║╚════██║██╔══██║██║   ██║██╔══╝  ╚════██║
+███████╗██║ ╚═╝ ██║██████╔╝███████╗██████╔╝    ██║ ╚═╝ ██║███████╗███████║███████║██║  ██║╚██████╔╝███████╗███████║
+╚══════╝╚═╝     ╚═╝╚═════╝ ╚══════╝╚═════╝     ╚═╝     ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚══════╝
+*/
+// ======================================================== //
+// ======================================================== //
+
+// ======================================================== //
 // Embeded Help message
-const helpMessageEmbed = {
+// ======================================================== //
+
+const helpMessageEmbeded = {
   color: 0x0099ff,
-  title: "Wocka-Flocka Commands",
+  title: "Wocka-Flocka Help Commands",
   url: "https://discord.js.org",
   author: {
     name: "Wocka-Flocka",
     icon_url: "https://i.imgur.com/AfFp7pu.png",
     url: "https://discord.js.org",
   },
-  description: "List of commands for Wocka-Flocka",
+  description: "List of help commands for Wocka-Flocka",
   thumbnail: {
     url: "https://i.imgur.com/AfFp7pu.png",
   },
@@ -75,84 +91,11 @@ const helpMessageEmbed = {
       value: "List of avaliable resources",
     },
     {
-      name: "\u200b",
-      // change line color
-      value: "**GAMES & FUN**",
-      inline: false,
-    },
-    {
-      name: "tell me a joke",
-      value: "Dad joke or rad joke? Their goos because their terrible",
-      inline: true,
-    },
-    {
-      name: "roll the dice",
-      value: "Oh CRAPS, let's roll some dice",
-      inline: true,
-    },
-    {
-      name: "8ball",
-      value: "Replies with an 8ball answer",
-      inline: true,
-    },
-    {
-      name: "tell me my fortune",
-      value: "Wocka-Flocka sees your future & will tell you your fortune",
-      inline: true,
-    },
-    {
-      name: "flip a coin",
-      value: "Wocka Flocka flips a coin",
-      inline: true,
-    },
-    {
-      name: "rock, paper, scissors",
-      value: "Ro-sham-bo! Let's you play rock, paper, or scissors",
-      inline: true,
-    },
-    {
-      name: "inspirational quote",
-      value: "Wocka-Flocka will give you an inspirational quote",
-      inline: true,
-    },
-    {
-      name: "random fact",
-      value: "How about a Snapple-cap level random fact?",
-      inline: true,
-    },
-    {
-      name: "pick a number",
-      value: "Wocka-Flocka can't pick your nose, but it can pick a number",
-      inline: true,
-    },
-    {
-      name: "random word",
-      value: "Wocka-Flocka will give you a random word",
-      inline: true,
-    },
-    {
-      name: "random insult",
-      value: "Wocka-Flocka will give you a random insult",
-      inline: true,
-    },
-    {
-      name: "random compliment",
-      value: "Wocka-Flocka will give you a random compliment",
-      inline: true,
-    },
-    {
-      name: "random developer fact",
-      value: "Wocka-Flocka will give you a random developer fact",
-      inline: true,
-    },
-    {
-      name: "define",
-      value: "Wocka-Flocka will define a word for you",
-      inline: true,
+      name: "!games",
+      value: "List of avaliable games",
     },
     {
       name: "\u200b",
-      // make value bold
       value: "**HOLIDAY TRACKER**",
       inline: false,
     },
@@ -227,14 +170,261 @@ client.on("messageCreate", async (message) => {
   const msg = message.content.toLowerCase();
 
   if (msg === "!help") {
-    await message.reply({ embeds: [helpMessageEmbed] });
+    await message.reply({ embeds: [helpMessageEmbeded] });
   }
 });
 
-// Embeded Help message
+// ======================================================== //
+// Embeded Game message
+// ======================================================== //
+
+const gameMessageEmbeded = {
+  color: 0x0099ff,
+  title: "Wocka-Flocka Game Commands",
+  url: "https://discord.js.org",
+  author: {
+    name: "Wocka-Flocka",
+    icon_url: "https://i.imgur.com/AfFp7pu.png",
+    url: "https://discord.js.org",
+  },
+  description: "List of game commands for Wocka-Flocka",
+  thumbnail: {
+    url: "https://i.imgur.com/AfFp7pu.png",
+  },
+  fields: [
+    // blank field
+
+    {
+      name: "\u200b",
+      value: "**GAMES & FUN**",
+      inline: false,
+    },
+    {
+      name: "tell me a joke",
+      value: "Dad joke or rad joke? Their goos because their terrible",
+      inline: true,
+    },
+    {
+      name: "roll the dice",
+      value: "Oh CRAPS, let's roll some dice",
+      inline: true,
+    },
+    {
+      name: "8ball",
+      value: "Replies with an 8ball answer",
+      inline: true,
+    },
+    {
+      name: "tell me my fortune",
+      value: "Wocka-Flocka sees your future & will tell you your fortune",
+      inline: true,
+    },
+    {
+      name: "flip a coin",
+      value: "Wocka Flocka flips a coin",
+      inline: true,
+    },
+    {
+      name: "rock, paper, scissors",
+      value: "Ro-sham-bo! Let's you play rock, paper, or scissors",
+      inline: true,
+    },
+    {
+      name: "inspirational quote",
+      value: "Wocka-Flocka will give you an inspirational quote",
+      inline: true,
+    },
+    {
+      name: "random fact",
+      value: "How about a Snapple-cap level random fact?",
+      inline: true,
+    },
+    {
+      name: "pick a number",
+      value: "Wocka-Flocka can't pick your nose, but it can pick a number",
+      inline: true,
+    },
+    {
+      name: "random word",
+      value: "Wocka-Flocka will give you a random word",
+      inline: true,
+    },
+    {
+      name: "random insult",
+      value: "Wocka-Flocka will give you a random insult",
+      inline: true,
+    },
+    {
+      name: "random compliment",
+      value: "Wocka-Flocka will give you a random compliment",
+      inline: true,
+    },
+    {
+      name: "random developer fact",
+      value: "Wocka-Flocka will give you a random developer fact",
+      inline: true,
+    },
+    {
+      name: "define",
+      value: "Wocka-Flocka will define a word for you",
+      inline: true,
+    },
+    {
+      name: "guess a number",
+      value: "Guess the number between 1 and 10",
+      inline: true,
+    },
+    {
+      name: "pick a card",
+      value: "Wocka-Flocka will pick a card for you",
+      inline: true,
+    },
+    {
+      name: "tell me a story",
+      value: "Wocka-Flocka will tell you a story",
+      inline: true,
+    },
+    {
+      name: "tell me a poem",
+      value: "Wocka-Flocka will tell you a poem",
+      inline: true,
+    },
+    {
+      name: "tell me a riddle",
+      value: "Wocka-Flocka will tell you a riddle",
+      inline: true,
+    },
+    {
+      name: "coffee",
+      value: "shows random gif of coffee",
+      inline: true,
+    },
+    {
+      name: "memes",
+      value: "shows random memes",
+      inline: true,
+    },
+  ],
+  image: {
+    url: "https://i.imgur.com/AfFp7pu.png",
+  },
+  timestamp: new Date().toISOString(),
+  footer: {
+    text: "Bot creator: Keith Hetrick",
+    icon_url: "https://i.imgur.com/AfFp7pu.png",
+  },
+};
+// const channel = client.channels.cache.get(DISCORD_SERVER_ID);
+// channel.send({ embeds: [gameMessageEmbed] });
+
+// call the !help command to get a list of commands
+client.on("messageCreate", async (message) => {
+  const msg = message.content.toLowerCase();
+
+  if (msg === "!games") {
+    await message.reply({ embeds: [gameMessageEmbeded] });
+  }
+});
+
+// ======================================================== //
+// Embeded Holiday message
+// ======================================================== //
+
+const holidayMessageEmbeded = {
+  color: 0x0099ff,
+  title: "Wocka-Flocka Holiday Commands",
+  url: "https://discord.js.org",
+  author: {
+    name: "Wocka-Flocka",
+    icon_url: "https://i.imgur.com/AfFp7pu.png",
+    url: "https://discord.js.org",
+  },
+  description: "List of holiday commands for Wocka-Flocka",
+  thumbnail: {
+    url: "https://i.imgur.com/AfFp7pu.png",
+  },
+  fields: [
+    {
+      name: "\u200b",
+      value: "**HOLIDAY TRACKER**",
+      inline: false,
+    },
+    {
+      name: "days until christmas",
+      value: "Tells you how many days until Christmas",
+      inline: true,
+    },
+    {
+      name: "days until easter",
+      value: "Tells you how many days until Easter",
+      inline: true,
+    },
+    {
+      name: "days until halloween",
+      value: "Tells you how many days until Halloween",
+      inline: true,
+    },
+    {
+      name: "days until thanksgiving",
+      value: "Tells you how many days until Thanksgiving",
+      inline: true,
+    },
+    {
+      name: "days until valentines day",
+      value: "Tells you how many days until Valentines Day",
+      inline: true,
+    },
+    {
+      name: "days until new years",
+      value: "Tells you how many days until New Years Eve",
+      inline: true,
+    },
+    {
+      name: "days until 4th of july",
+      value: "Tells you how many days until the 4th of July",
+      inline: true,
+    },
+    {
+      name: "days until memorial day",
+      value: "Tells you how many days until Memorial Day",
+      inline: true,
+    },
+    {
+      name: "\u200b",
+      value: "**WEATHER, TIME ZONE & LOCATION TRACKER**",
+      inline: false,
+    },
+    {
+      name: "what is the weather like",
+      value: "Wocka-Flocka will tell you the weather in your area",
+    },
+  ],
+  image: {
+    url: "https://i.imgur.com/AfFp7pu.png",
+  },
+  timestamp: new Date().toISOString(),
+  footer: {
+    text: "Bot creator: Keith Hetrick",
+    icon_url: "https://i.imgur.com/AfFp7pu.png",
+  },
+};
+
+// call the !help command to get a list of commands
+client.on("messageCreate", async (message) => {
+  const msg = message.content.toLowerCase();
+
+  if (msg === "!holiday" || msg === "!holidays") {
+    await message.reply({ embeds: [holidayMessageEmbeded] });
+  }
+});
+
+// ======================================================== //
+// Embeded Resource message
+// ======================================================== //
+
 const resourceMessageEmbeded = {
   color: 0x0099ff,
-  title: "Wocka-Flocka Resouce List",
+  title: "Wocka-Flocka Resouce Commands",
   url: "https://discord.js.org",
   author: {
     name: "Wocka-Flocka",
@@ -247,35 +437,35 @@ const resourceMessageEmbeded = {
   },
   fields: [
     {
-      name: "Recommend Algorithm resources",
+      name: "Algorithm resources",
       value: "Wocka-Flocka will recommend Algorithm resources",
     },
     {
-      name: "Recommend Data Structures resources",
+      name: "Data Structures resources",
       value: "Wocka-Flocka will recommend Data Structures resources",
     },
     {
-      name: "Recommend Front End Development resources",
+      name: "Front End Development resources",
       value: "Wocka-Flocka will recommend Front End Development resources",
     },
     {
-      name: "Recommend Back End Development resources",
+      name: "Back End Development resources",
       value: "Wocka-Flocka will recommend Back End Development resources",
     },
     {
-      name: "Recommend Full Stack Development resources",
+      name: "Full Stack Development resources",
       value: "Wocka-Flocka will recommend Full Stack Development resources",
     },
     {
-      name: "Recommend React resources",
+      name: "React resources",
       value: "Wocka-Flocka will recommend React resources",
     },
     {
-      name: "Recommend Node resources",
+      name: "Node resources",
       value: "Wocka-Flocka will recommend Node resources",
     },
     {
-      name: "Recommend AI resources",
+      name: "AI resources",
       value: "Wocka-Flocka will recommend AI resources",
     },
   ],
@@ -294,14 +484,21 @@ client.on("messageCreate", async (message) => {
   // regex any non-alphanumeric character like spaces, commas, etc.
   const msg = message.content.toLowerCase();
 
-  if (msg === "!resources") {
+  if (msg === "!resources" || msg === "!resource") {
     await message.reply({ embeds: [resourceMessageEmbeded] });
   }
 });
 
 // ======================================================== //
 // ======================================================== //
-// CLEVERBOT AI RESPONSE CONVERSATION
+/*
+ █████╗    ██╗        ██████╗██╗  ██╗ █████╗ ████████╗██████╗  ██████╗ ████████╗
+██╔══██╗   ██║       ██╔════╝██║  ██║██╔══██╗╚══██╔══╝██╔══██╗██╔═══██╗╚══██╔══╝
+███████║   ██║       ██║     ███████║███████║   ██║   ██████╔╝██║   ██║   ██║   
+██╔══██║   ██║       ██║     ██╔══██║██╔══██║   ██║   ██╔══██╗██║   ██║   ██║   
+██║  ██║██╗██║██╗    ╚██████╗██║  ██║██║  ██║   ██║   ██████╔╝╚██████╔╝   ██║   
+╚═╝  ╚═╝╚═╝╚═╝╚═╝     ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═════╝  ╚═════╝    ╚═╝   
+*/
 // ======================================================== //
 // ======================================================== //
 
@@ -328,7 +525,14 @@ client.login(TOKEN);
 
 // ======================================================== //
 // ======================================================== //
-// CHANNEL & SERVER MESSAGE AUTOMATION
+/*
+███████╗███████╗██████╗ ██╗   ██╗███████╗██████╗      █████╗ ██╗   ██╗████████╗ ██████╗ ███╗   ███╗ █████╗ ████████╗██╗ ██████╗ ███╗   ██╗
+██╔════╝██╔════╝██╔══██╗██║   ██║██╔════╝██╔══██╗    ██╔══██╗██║   ██║╚══██╔══╝██╔═══██╗████╗ ████║██╔══██╗╚══██╔══╝██║██╔═══██╗████╗  ██║
+███████╗█████╗  ██████╔╝██║   ██║█████╗  ██████╔╝    ███████║██║   ██║   ██║   ██║   ██║██╔████╔██║███████║   ██║   ██║██║   ██║██╔██╗ ██║
+╚════██║██╔══╝  ██╔══██╗╚██╗ ██╔╝██╔══╝  ██╔══██╗    ██╔══██║██║   ██║   ██║   ██║   ██║██║╚██╔╝██║██╔══██║   ██║   ██║██║   ██║██║╚██╗██║
+███████║███████╗██║  ██║ ╚████╔╝ ███████╗██║  ██║    ██║  ██║╚██████╔╝   ██║   ╚██████╔╝██║ ╚═╝ ██║██║  ██║   ██║   ██║╚██████╔╝██║ ╚████║
+╚══════╝╚══════╝╚═╝  ╚═╝  ╚═══╝  ╚══════╝╚═╝  ╚═╝    ╚═╝  ╚═╝ ╚═════╝    ╚═╝    ╚═════╝ ╚═╝     ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
+*/
 // ======================================================== //
 // ======================================================== //
 
@@ -449,11 +653,81 @@ client.on("messageCreate", (message) => {
     message.author.send(`Total members: ${members.size}`);
     console.log(`Total members: ${members.size}`);
   }
+
+  // AUTOMATED "QUOTE OF THE DAY" MESSAGE
+  // Option 1
+  // schedule.scheduleJob("*/5 * * * *", function () {
+  //   if (
+  //     randomQuote.quoteAuthor === undefined ||
+  //     randomQuote.quoteAuthor === "" ||
+  //     randomQuote.quoteAuthor === null ||
+  //     randomQuote.quoteAuthor === " "
+  //   ) {
+  //     randomQuote.quoteAuthor = "Unknown";
+  //   }
+  //   message.reply(
+  //     `Quote of the day: "${randomQuote.quoteText}" - ${randomQuote.quoteAuthor}`
+  //   );
+  // });
+
+  // Option 2
+  const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+  const rule = new schedule.RecurrenceRule();
+  rule.dayOfWeek = [0, new schedule.Range(0, 6)];
+  rule.hour = 9;
+  rule.minute = 0;
+  rule.tz = "America/New_York";
+
+  schedule.scheduleJob(rule, function () {
+    console.log("---------------------");
+    console.log("\nRunning 'Quote of the Day' Job");
+    console.log("\nCurrent Date: " + new Date());
+    if (
+      randomQuote.quoteAuthor === undefined ||
+      randomQuote.quoteAuthor === "" ||
+      randomQuote.quoteAuthor === null ||
+      randomQuote.quoteAuthor === " "
+    ) {
+      randomQuote.quoteAuthor = "Unknown";
+    }
+    message.reply(
+      `Quote of the day: "${randomQuote.quoteText}" - ${randomQuote.quoteAuthor}`
+    );
+    console.log("\nFinished job!");
+  });
+
+  // Option 3
+  // run every day at 9am, only once
+
+  // set a timezone rule
+  // schedule.scheduleJob("48 20 * * 0-6", "America/New_York", () => {
+  //   console.log("---------------------");
+  //   console.log("\nRunning 'Quote of the Day' Job");
+  //   console.log("\nCurrent Date: " + new Date());
+  //   if (
+  //     randomQuote.quoteAuthor === undefined ||
+  //     randomQuote.quoteAuthor === "" ||
+  //     randomQuote.quoteAuthor === null ||
+  //     randomQuote.quoteAuthor === " "
+  //   ) {
+  //     randomQuote.quoteAuthor = "Unknown";
+  //   }
+  //   message.reply(
+  //     `Quote of the day: "${randomQuote.quoteText}" - ${randomQuote.quoteAuthor}`
+  //   );
+  // });
 });
 
 // ======================================================== //
 // ======================================================== //
-// GAMES & FUN
+/*
+ ██████╗  █████╗ ███╗   ███╗███████╗███████╗       ██╗       ███████╗██╗   ██╗███╗   ██╗
+██╔════╝ ██╔══██╗████╗ ████║██╔════╝██╔════╝       ██║       ██╔════╝██║   ██║████╗  ██║
+██║  ███╗███████║██╔████╔██║█████╗  ███████╗    ████████╗    █████╗  ██║   ██║██╔██╗ ██║
+██║   ██║██╔══██║██║╚██╔╝██║██╔══╝  ╚════██║    ██╔═██╔═╝    ██╔══╝  ██║   ██║██║╚██╗██║
+╚██████╔╝██║  ██║██║ ╚═╝ ██║███████╗███████║    ██████║      ██║     ╚██████╔╝██║ ╚████║
+ ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝╚══════╝    ╚═════╝      ╚═╝      ╚═════╝ ╚═╝  ╚═══╝
+*/
 // ======================================================== //
 // ======================================================== //
 
@@ -512,14 +786,23 @@ client.on("messageCreate", (message) => {
   }
 
   // "Tell me a joke" command
-  if (msg === "tell me a joke") {
+  if (
+    msg === "tell me a joke" ||
+    msg === "tell me a dad joke" ||
+    msg === "joke time"
+  ) {
     // jokes come from json file
     const randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
     message.reply(randomJoke);
   }
 
   // "Tell me my fortune" command
-  if (msg === "tell me my fortune") {
+  if (
+    msg === "tell me my fortune" ||
+    msg === "tell me my future" ||
+    msg === "fortune" ||
+    msg === "future"
+  ) {
     // fortunes come from json file
     const randomFortune = fortunes[Math.floor(Math.random() * fortunes.length)];
     message.reply(`Fortune teller says: ${randomFortune}`);
@@ -590,29 +873,52 @@ client.on("messageCreate", (message) => {
   }
 
   // "guess a number" game
-  if (msg === "guess a number") {
-    // generate a random number between 1 and 10
+  if (msg === "guess a number" || msg === "guess the number") {
+    // // generate a random number between 1 and 100
+    // const randomNumber = Math.floor(Math.random() * 100) + 1;
+    // // ask user to guess the number
+    // message.reply(
+    //   `Guess a number between 1 and 100. You have 5 guesses. Type "guess" followed by your guess. Example: guess 50`
+    // );
+    // // create a collector for the user's guess
+    // const filter = (m) => m.author.id === message.author.id;
+    // const collector = message.channel.createMessageCollector(filter, {
+    //   time: 10000,
+    // });
+    // // if the user guesses the number, tell them they got it
+    // collector.on("collect", (m) => {
+    //   if (m.content === `guess ${randomNumber}`) {
+    //     message.reply("You got it!");
+    //     collector.stop();
+    //   }
+    // });
+    // // if the user doesn't guess the number in 5 tries, tell them they lost
+    // collector.on("end", (collected) => {
+    //   if (collected.size === 0) {
+    //     message.reply("You lost!");
+    //   }
+    // });
+
     const randomNumber = Math.floor(Math.random() * 10) + 1;
-    // send the number to the user
     message.reply(
-      `I'm thinking of a number between 1 and 10. Try to guess it!`
+      `Guess a number between 1 and 10. You have 5 guesses. Type "guess" followed by your guess. Example: guess 5`
     );
-    // collect user input & compare it to the random number
     const filter = (m) => m.author.id === message.author.id;
-    message.channel
-      .awaitMessages(filter, { max: 1, time: 15000 })
-      .then((collected) => {
-        if (collected.first().content === randomNumber.toString()) {
-          message.reply("You guessed it! You win!");
-        } else {
-          message.reply(
-            `Nope, the number I was thinking of was ${randomNumber}`
-          );
-        }
-      })
-      .catch((collected) => {
-        message.reply("You didn't guess in time! Try again later!");
-      });
+    const collector = message.channel.createMessageCollector(filter, {
+      time: 10000,
+    });
+    collector.on("collect", (m) => {
+      if (m.content === `guess ${randomNumber}`) {
+        message.reply("Hey you got it! the number was " + randomNumber);
+        collector.stop();
+      }
+    });
+    //  send message.reply("You lost!") if the user doesn't guess the number in 5 tries or after 10 seconds
+    collector.on("end", (collected) => {
+      if (collected.size === 0) {
+        message.reply("You lost!");
+      }
+    });
   }
 
   // "inspirational quote" command
@@ -667,7 +973,7 @@ client.on("messageCreate", (message) => {
     message.reply(randomCompliment);
   }
 
-  // define a word using dictionary.JSON
+  // Dictionary functionality
   if (msg.startsWith("define")) {
     const word = msg.slice(7).trim();
     const definition = dictionary[word];
@@ -729,9 +1035,12 @@ client.on("messageCreate", (message) => {
     message.reply(randomMeme.image);
   }
 
-  // message.reply with a short story response form the url https://shortstories-api.onrender.com
-
-  if (msg === "short story" || msg === "tell me a story") {
+  // "tell me a story" command
+  if (
+    msg === "short story" ||
+    msg === "tell me a story" ||
+    msg === "story time"
+  ) {
     axios
       .get("https://shortstories-api.onrender.com/", {
         headers: { "Accept-Encoding": "gzip,deflate,compress" },
@@ -749,24 +1058,55 @@ client.on("messageCreate", (message) => {
       .catch((error) => {
         console.log(error);
       });
+  }
 
-    // fetch("https://shortstories-api.onrender.com/")
-    //   .then((res) => res.json())
-    //   .then((data) => {
-    //     console.log(data);
-    //     let story = data.story;
-    //     let title = data.title;
-    //     let author = data.author;
-    //     let moral = data.moral;
-    //     message.reply(
-    //       `${title} by ${author} \n\n ${story} \n\nMoral: ${moral}`
-    //     );
-    //   });
+  // "tell me a poem" command
+  if (msg === "poem" || msg === "tell me a poem") {
+    axios
+      .get("https://www.beanpoems.com/api/poems")
+      .then((res) => {
+        console.log(res.data);
+        let nums = [0, 1, 2, 3, 4];
+
+        let randomPoem = nums[Math.floor(Math.random() * nums.length)];
+        let poem = res.data[randomPoem].body;
+        let title = res.data[randomPoem].title;
+        let description = `_${res.data[randomPoem].description}_`;
+        message.reply(`${title} - ${description} \n\n ${poem}`);
+      })
+      .catch((error) => {
+        console.log("ERROR : " + error);
+      });
+  }
+  // "tell me a riddle" command
+  if (msg === "riddle" || msg === "tell me a riddle") {
+    axios
+      .get("https://riddles-api.vercel.app/random")
+      .then((res) => {
+        console.log(res.data);
+        let riddle = res.data.riddle;
+        let answer = res.data.answer;
+
+        message.reply(`\n _Riddle_: ${riddle}...`);
+        setTimeout(function () {
+          message.reply(`_The answer is_...${answer}`);
+        }, 10000);
+      })
+      .catch((error) => {
+        console.log("ERROR : " + error);
+      });
   }
 
   // ======================================================== //
   // ======================================================== //
-  // HOLIDAY COUNTDOWNS
+  /*
+  ██╗  ██╗ ██████╗ ██╗     ██╗██████╗  █████╗ ██╗   ██╗    ████████╗██████╗  █████╗  ██████╗██╗  ██╗███████╗██████╗ 
+  ██║  ██║██╔═══██╗██║     ██║██╔══██╗██╔══██╗╚██╗ ██╔╝    ╚══██╔══╝██╔══██╗██╔══██╗██╔════╝██║ ██╔╝██╔════╝██╔══██╗
+  ███████║██║   ██║██║     ██║██║  ██║███████║ ╚████╔╝        ██║   ██████╔╝███████║██║     █████╔╝ █████╗  ██████╔╝
+  ██╔══██║██║   ██║██║     ██║██║  ██║██╔══██║  ╚██╔╝         ██║   ██╔══██╗██╔══██║██║     ██╔═██╗ ██╔══╝  ██╔══██╗
+  ██║  ██║╚██████╔╝███████╗██║██████╔╝██║  ██║   ██║          ██║   ██║  ██║██║  ██║╚██████╗██║  ██╗███████╗██║  ██║
+  ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝╚═════╝ ╚═╝  ╚═╝   ╚═╝          ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝
+  */
   // ======================================================== //
   // ======================================================== //
 
@@ -888,7 +1228,14 @@ client.on("messageCreate", (message) => {
 
   // ======================================================== //
   // ======================================================== //
-  // TIME ZONES
+  /*
+████████╗██╗███╗   ███╗███████╗    ███████╗ ██████╗ ███╗   ██╗███████╗███████╗
+╚══██╔══╝██║████╗ ████║██╔════╝    ╚══███╔╝██╔═══██╗████╗  ██║██╔════╝██╔════╝
+   ██║   ██║██╔████╔██║█████╗        ███╔╝ ██║   ██║██╔██╗ ██║█████╗  ███████╗
+   ██║   ██║██║╚██╔╝██║██╔══╝       ███╔╝  ██║   ██║██║╚██╗██║██╔══╝  ╚════██║
+   ██║   ██║██║ ╚═╝ ██║███████╗    ███████╗╚██████╔╝██║ ╚████║███████╗███████║
+   ╚═╝   ╚═╝╚═╝     ╚═╝╚══════╝    ╚══════╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝╚══════╝
+*/
   // ======================================================== //
   // ======================================================== //
 
@@ -914,7 +1261,14 @@ client.on("messageCreate", (message) => {
 
   // ======================================================== //
   // ======================================================== //
-  // WEATHER & LOCATION
+  /*
+  ██╗    ██╗███████╗ █████╗ ████████╗██╗  ██╗███████╗██████╗        ██╗       ██╗      ██████╗  ██████╗ █████╗ ████████╗██╗ ██████╗ ███╗   ██╗
+  ██║    ██║██╔════╝██╔══██╗╚══██╔══╝██║  ██║██╔════╝██╔══██╗       ██║       ██║     ██╔═══██╗██╔════╝██╔══██╗╚══██╔══╝██║██╔═══██╗████╗  ██║
+  ██║ █╗ ██║█████╗  ███████║   ██║   ███████║█████╗  ██████╔╝    ████████╗    ██║     ██║   ██║██║     ███████║   ██║   ██║██║   ██║██╔██╗ ██║
+  ██║███╗██║██╔══╝  ██╔══██║   ██║   ██╔══██║██╔══╝  ██╔══██╗    ██╔═██╔═╝    ██║     ██║   ██║██║     ██╔══██║   ██║   ██║██║   ██║██║╚██╗██║
+  ╚███╔███╔╝███████╗██║  ██║   ██║   ██║  ██║███████╗██║  ██║    ██████║      ███████╗╚██████╔╝╚██████╗██║  ██║   ██║   ██║╚██████╔╝██║ ╚████║
+  ╚══╝╚══╝ ╚══════╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝    ╚═════╝      ╚══════╝ ╚═════╝  ╚═════╝╚═╝  ╚═╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
+  */
   // ======================================================== //
   // ======================================================== //
 
@@ -1043,73 +1397,18 @@ client.on("messageCreate", (message) => {
         console.log("LOCATION ERROR: " + error);
       });
   }
-
-  // Option 1
-  // schedule.scheduleJob("*/5 * * * *", function () {
-  //   if (
-  //     randomQuote.quoteAuthor === undefined ||
-  //     randomQuote.quoteAuthor === "" ||
-  //     randomQuote.quoteAuthor === null ||
-  //     randomQuote.quoteAuthor === " "
-  //   ) {
-  //     randomQuote.quoteAuthor = "Unknown";
-  //   }
-  //   message.reply(
-  //     `Quote of the day: "${randomQuote.quoteText}" - ${randomQuote.quoteAuthor}`
-  //   );
-  // });
-
-  // Option 2
-  const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-  const rule = new schedule.RecurrenceRule();
-  rule.dayOfWeek = [0, new schedule.Range(0, 6)];
-  rule.hour = 9;
-  rule.minute = 0;
-  rule.tz = "America/New_York";
-
-  schedule.scheduleJob(rule, function () {
-    console.log("---------------------");
-    console.log("\nRunning 'Quote of the Day' Job");
-    console.log("\nCurrent Date: " + new Date());
-    if (
-      randomQuote.quoteAuthor === undefined ||
-      randomQuote.quoteAuthor === "" ||
-      randomQuote.quoteAuthor === null ||
-      randomQuote.quoteAuthor === " "
-    ) {
-      randomQuote.quoteAuthor = "Unknown";
-    }
-    message.reply(
-      `Quote of the day: "${randomQuote.quoteText}" - ${randomQuote.quoteAuthor}`
-    );
-    console.log("\nFinished job!");
-  });
-
-  // Option 3
-  // run every day at 9am, only once
-
-  // set a timezone rule
-  // schedule.scheduleJob("48 20 * * 0-6", "America/New_York", () => {
-  //   console.log("---------------------");
-  //   console.log("\nRunning 'Quote of the Day' Job");
-  //   console.log("\nCurrent Date: " + new Date());
-  //   if (
-  //     randomQuote.quoteAuthor === undefined ||
-  //     randomQuote.quoteAuthor === "" ||
-  //     randomQuote.quoteAuthor === null ||
-  //     randomQuote.quoteAuthor === " "
-  //   ) {
-  //     randomQuote.quoteAuthor = "Unknown";
-  //   }
-  //   message.reply(
-  //     `Quote of the day: "${randomQuote.quoteText}" - ${randomQuote.quoteAuthor}`
-  //   );
-  // });
 });
 
 // ======================================================== //
 // ======================================================== //
-// REQUEST USER INFORMATION
+/*
+██████╗ ███████╗ ██████╗ ██╗   ██╗███████╗███████╗████████╗    ██╗   ██╗███████╗███████╗██████╗     ██████╗  █████╗ ████████╗ █████╗ 
+██╔══██╗██╔════╝██╔═══██╗██║   ██║██╔════╝██╔════╝╚══██╔══╝    ██║   ██║██╔════╝██╔════╝██╔══██╗    ██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗
+██████╔╝█████╗  ██║   ██║██║   ██║█████╗  ███████╗   ██║       ██║   ██║███████╗█████╗  ██████╔╝    ██║  ██║███████║   ██║   ███████║
+██╔══██╗██╔══╝  ██║▄▄ ██║██║   ██║██╔══╝  ╚════██║   ██║       ██║   ██║╚════██║██╔══╝  ██╔══██╗    ██║  ██║██╔══██║   ██║   ██╔══██║
+██║  ██║███████╗╚██████╔╝╚██████╔╝███████╗███████║   ██║       ╚██████╔╝███████║███████╗██║  ██║    ██████╔╝██║  ██║   ██║   ██║  ██║
+╚═╝  ╚═╝╚══════╝ ╚══▀▀═╝  ╚═════╝ ╚══════╝╚══════╝   ╚═╝        ╚═════╝ ╚══════╝╚══════╝╚═╝  ╚═╝    ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝
+*/
 // ======================================================== //
 // ======================================================== //
 
@@ -1152,7 +1451,14 @@ client.on("messageCreate", (message) => {
 
 // ======================================================== //
 // ======================================================== //
-// ALGORITHMS, DATA STRUCTURES & CODING RESOURCES
+/*
+██████╗ ███████╗███████╗ ██████╗ ██╗   ██╗██████╗  ██████╗███████╗███████╗
+██╔══██╗██╔════╝██╔════╝██╔═══██╗██║   ██║██╔══██╗██╔════╝██╔════╝██╔════╝
+██████╔╝█████╗  ███████╗██║   ██║██║   ██║██████╔╝██║     █████╗  ███████╗
+██╔══██╗██╔══╝  ╚════██║██║   ██║██║   ██║██╔══██╗██║     ██╔══╝  ╚════██║
+██║  ██║███████╗███████║╚██████╔╝╚██████╔╝██║  ██║╚██████╗███████╗███████║
+╚═╝  ╚═╝╚══════╝╚══════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝ ╚═════╝╚══════╝╚══════╝
+  */
 // ======================================================== //
 // ======================================================== //
 
