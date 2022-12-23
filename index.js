@@ -730,19 +730,38 @@ client.on("messageCreate", (message) => {
   }
 
   // message.reply with a short story response form the url https://shortstories-api.onrender.com
+
   if (msg === "short story" || msg === "tell me a story") {
-    fetch("https://shortstories-api.onrender.com/")
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        let story = data.story;
-        let title = data.title;
-        let author = data.author;
-        let moral = data.moral;
+    axios
+      .get("https://shortstories-api.onrender.com/", {
+        headers: { "Accept-Encoding": "gzip,deflate,compress" },
+      })
+      .then((res) => {
+        console.log(res.data);
+        let story = res.data.story;
+        let title = res.data.title;
+        let author = res.data.author;
+        let moral = res.data.moral;
         message.reply(
           `${title} by ${author} \n\n ${story} \n\nMoral: ${moral}`
         );
+      })
+      .catch((error) => {
+        console.log(error);
       });
+
+    // fetch("https://shortstories-api.onrender.com/")
+    //   .then((res) => res.json())
+    //   .then((data) => {
+    //     console.log(data);
+    //     let story = data.story;
+    //     let title = data.title;
+    //     let author = data.author;
+    //     let moral = data.moral;
+    //     message.reply(
+    //       `${title} by ${author} \n\n ${story} \n\nMoral: ${moral}`
+    //     );
+    //   });
   }
 
   // ======================================================== //
@@ -1041,13 +1060,39 @@ client.on("messageCreate", (message) => {
   // });
 
   // Option 2
-  // const rule = new schedule.RecurrenceRule();
-  // rule.dayOfWeek = [0, new schedule.Range(0, 6)];
-  // rule.hour = 9;
-  // rule.minute = 0;
-  // rule.tz = "America/New_York";
+  const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+  const rule = new schedule.RecurrenceRule();
+  rule.dayOfWeek = [0, new schedule.Range(0, 6)];
+  rule.hour = 9;
+  rule.minute = 0;
+  rule.tz = "America/New_York";
 
-  // schedule.scheduleJob(rule, function () {
+  schedule.scheduleJob(rule, function () {
+    console.log("---------------------");
+    console.log("\nRunning 'Quote of the Day' Job");
+    console.log("\nCurrent Date: " + new Date());
+    if (
+      randomQuote.quoteAuthor === undefined ||
+      randomQuote.quoteAuthor === "" ||
+      randomQuote.quoteAuthor === null ||
+      randomQuote.quoteAuthor === " "
+    ) {
+      randomQuote.quoteAuthor = "Unknown";
+    }
+    message.reply(
+      `Quote of the day: "${randomQuote.quoteText}" - ${randomQuote.quoteAuthor}`
+    );
+    console.log("\nFinished job!");
+  });
+
+  // Option 3
+  // run every day at 9am, only once
+
+  // set a timezone rule
+  // schedule.scheduleJob("48 20 * * 0-6", "America/New_York", () => {
+  //   console.log("---------------------");
+  //   console.log("\nRunning 'Quote of the Day' Job");
+  //   console.log("\nCurrent Date: " + new Date());
   //   if (
   //     randomQuote.quoteAuthor === undefined ||
   //     randomQuote.quoteAuthor === "" ||
@@ -1060,22 +1105,6 @@ client.on("messageCreate", (message) => {
   //     `Quote of the day: "${randomQuote.quoteText}" - ${randomQuote.quoteAuthor}`
   //   );
   // });
-
-  // Option 3
-  const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-  schedule.scheduleJob("0 9 * * 0-6", function () {
-    if (
-      randomQuote.quoteAuthor === undefined ||
-      randomQuote.quoteAuthor === "" ||
-      randomQuote.quoteAuthor === null ||
-      randomQuote.quoteAuthor === " "
-    ) {
-      randomQuote.quoteAuthor = "Unknown";
-    }
-    message.reply(
-      `Quote of the day: "${randomQuote.quoteText}" - ${randomQuote.quoteAuthor}`
-    );
-  });
 });
 
 // ======================================================== //
