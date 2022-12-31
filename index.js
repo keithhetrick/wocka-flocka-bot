@@ -30,7 +30,7 @@ const memes = require("./jsonFiles/memes.json");
 
 // .env & API keys
 const WEATHER_API_KEY = process.env.OPEN_WEATHER_API_KEY;
-// const IP_API_KEY = process.env.IP_GEOLOCATION_API_KEY;
+const IP_API_KEY = process.env.IP_GEOLOCATION_API_KEY;
 const IPIFY_API_KEY = process.env.IPIFY_API_KEY;
 const DISCORD_SERVER_ID = process.env.DISCORD_SERVER_ID;
 const TOKEN = process.env.TOKEN;
@@ -653,69 +653,50 @@ client.on("messageCreate", (message) => {
     message.author.send(`Total members: ${members.size}`);
     console.log(`Total members: ${members.size}`);
   }
+});
 
-  // AUTOMATED "QUOTE OF THE DAY" MESSAGE
-  // Option 1
-  // schedule.scheduleJob("*/5 * * * *", function () {
-  //   if (
-  //     randomQuote.quoteAuthor === undefined ||
-  //     randomQuote.quoteAuthor === "" ||
-  //     randomQuote.quoteAuthor === null ||
-  //     randomQuote.quoteAuthor === " "
-  //   ) {
-  //     randomQuote.quoteAuthor = "Unknown";
-  //   }
-  //   message.reply(
-  //     `Quote of the day: "${randomQuote.quoteText}" - ${randomQuote.quoteAuthor}`
-  //   );
-  // });
+// AUTOMATED "QUOTE OF THE DAY" MESSAGE one time, every 24 hours at 9 am
+// const schedule = require("node-schedule");
+const quote = require("./jsonFiles/quotes.json");
+const randomQuote = quote[Math.floor(Math.random() * quote.length)];
 
-  // Option 2
-  const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-  const rule = new schedule.RecurrenceRule();
-  rule.dayOfWeek = [0, new schedule.Range(0, 6)];
-  rule.hour = 9;
-  rule.minute = 0;
-  rule.tz = "America/New_York";
+// use only one quote per day
+const quoteOfTheDay = schedule.scheduleJob("0 9 * * *", async function () {
+  // const channel = client.channels.cache.get(DISCORD_SERVER_ID);
+  message.channel
+    .send({
+      embeds: [
+        {
+          title: "Quote of the day:",
+          description: `"${randomQuote.quote}"`,
+          fields: [
+            {
+              name: "Author:",
+              value: `${randomQuote.author}`,
+            },
+          ],
+          timestamp: new Date(),
+          footer: {
+            text: "Wocka-Flocka",
+            icon_url: "hutps://i.imgur.com/AfFp7pu.png",
+          },
+        },
+      ],
+    })
+    .then((msg) => {
+      console.log(`Quote of the day sent to ${msg.channel.name}`);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
 
-  schedule.scheduleJob(rule, function () {
-    console.log("---------------------");
-    console.log("\nRunning 'Quote of the Day' Job");
-    console.log("\nCurrent Date: " + new Date());
-    if (
-      randomQuote.quoteAuthor === undefined ||
-      randomQuote.quoteAuthor === "" ||
-      randomQuote.quoteAuthor === null ||
-      randomQuote.quoteAuthor === " "
-    ) {
-      randomQuote.quoteAuthor = "Unknown";
-    }
-    message.reply(
-      `Quote of the day: "${randomQuote.quoteText}" - ${randomQuote.quoteAuthor}`
-    );
-    console.log("\nFinished job!");
-  });
+client.on("messageCreate", async (message) => {
+  const msg = message.content.toLowerCase();
 
-  // Option 3
-  // run every day at 9am, only once
-
-  // set a timezone rule
-  // schedule.scheduleJob("48 20 * * 0-6", "America/New_York", () => {
-  //   console.log("---------------------");
-  //   console.log("\nRunning 'Quote of the Day' Job");
-  //   console.log("\nCurrent Date: " + new Date());
-  //   if (
-  //     randomQuote.quoteAuthor === undefined ||
-  //     randomQuote.quoteAuthor === "" ||
-  //     randomQuote.quoteAuthor === null ||
-  //     randomQuote.quoteAuthor === " "
-  //   ) {
-  //     randomQuote.quoteAuthor = "Unknown";
-  //   }
-  //   message.reply(
-  //     `Quote of the day: "${randomQuote.quoteText}" - ${randomQuote.quoteAuthor}`
-  //   );
-  // });
+  if (msg === "!quote-test") {
+    await message.reply({ embeds: [quoteOfTheDay] });
+  }
 });
 
 // ======================================================== //
@@ -922,7 +903,7 @@ client.on("messageCreate", (message) => {
   }
 
   // "inspirational quote" command
-  if (msg === "inspirational quote") {
+  if (msg === "inspirational quote" || msg === "quote") {
     // quotes come from json file
     const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
     // if no author is listed, use "Unknown"
@@ -938,7 +919,7 @@ client.on("messageCreate", (message) => {
   }
 
   // "random fact" generator
-  if (msg === "random fact") {
+  if (msg === "random fact" || msg === "fact") {
     // facts come from json file
     const randomFact = facts[Math.floor(Math.random() * facts.length)];
     message.reply(randomFact);
@@ -959,14 +940,24 @@ client.on("messageCreate", (message) => {
   }
 
   // "random insult" generator
-  if (msg === "random insult") {
+  if (
+    msg === "random insult" ||
+    msg === "insult" ||
+    msg === "insult me" ||
+    msg === "hurt me" ||
+    msg === "hurt my feelings"
+  ) {
     // insults come from json file
     const randomInsult = insults[Math.floor(Math.random() * insults.length)];
     message.reply(randomInsult);
   }
 
   // "random compliment" generator
-  if (msg === "random compliment") {
+  if (
+    msg === "random compliment" ||
+    msg === "compliment" ||
+    msg === "compliment me"
+  ) {
     // compliments come from json file
     const randomCompliment =
       compliments[Math.floor(Math.random() * compliments.length)];
@@ -1078,6 +1069,7 @@ client.on("messageCreate", (message) => {
         console.log("ERROR : " + error);
       });
   }
+
   // "tell me a riddle" command
   if (msg === "riddle" || msg === "tell me a riddle") {
     axios
@@ -1110,120 +1102,304 @@ client.on("messageCreate", (message) => {
   // ======================================================== //
   // ======================================================== //
 
-  // "aays until christmas" command
-  if (msg === "days until christmas") {
+  // getFullYear() helper function
+  const getFullYear = () => {
     const today = new Date();
-    const nextChristmas = new Date(today.getFullYear(), 11, 25);
-    if (today.getMonth() === 11 && today.getDate() > 25) {
-      nextChristmas.setFullYear(nextChristmas.getFullYear() + 1);
-    }
-    const oneDay = 1000 * 60 * 60 * 24;
-    const daysUntilChristmas = Math.ceil(
-      (nextChristmas.getTime() - today.getTime()) / oneDay
-    );
-    message.reply(`There are ${daysUntilChristmas} days until Christmas!`);
+    return today.getFullYear();
+  };
+
+  // today variable
+  const today = new Date();
+
+  // "what year is it?" command
+  if (
+    msg === "what year is it?" ||
+    msg === "what year is it" ||
+    msg === "whats the year" ||
+    msg === "whats the current year" ||
+    msg === "current year"
+  ) {
+    message.reply(`It's ${getFullYear()}!`);
   }
 
-  // "days until new years" command
-  if (msg === "days until new years") {
-    const today = new Date();
-    const nextNewYears = new Date(today.getFullYear(), 11, 31);
-    if (today.getMonth() === 11 && today.getDate() > 31) {
-      nextNewYears.setFullYear(nextNewYears.getFullYear() + 1);
-    }
-    const oneDay = 1000 * 60 * 60 * 24;
-    const daysUntilNewYears = Math.ceil(
-      (nextNewYears.getTime() - today.getTime()) / oneDay
-    );
-    message.reply(`There are ${daysUntilNewYears} days until New Years Eve!`);
+  // "what month is it?" command
+  if (
+    msg === "what month is it?" ||
+    msg === "what month is it" ||
+    msg === "whats the month" ||
+    msg === "current month"
+  ) {
+    const months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+    message.reply(`It's ${months[today.getMonth()]}!`);
   }
 
-  // "days until valentines" command
-  if (msg === "days until valentines") {
-    const today = new Date();
-    const nextValentinesDay = new Date(today.getFullYear(), 1, 14);
-    if (today.getMonth() === 1 && today.getDate() > 14) {
-      nextValentinesDay.setFullYear(nextValentinesDay.getFullYear() + 1);
-    }
-    const oneDay = 1000 * 60 * 60 * 24;
-    const daysUntilValentinesDay = Math.ceil(
-      365 + (nextValentinesDay.getTime() - today.getTime()) / oneDay
-    );
-    message.reply(
-      `There are ${daysUntilValentinesDay} days until Valentines Day!`
-    );
+  // "what day is it?" command
+  if (
+    msg === "what day is it?" ||
+    msg === "what day is it" ||
+    msg === "current day" ||
+    msg === "whats the current day"
+  ) {
+    const days = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+    message.reply(`It's ${days[today.getDay()]}!`);
   }
 
-  // "days until halloween" command
-  if (msg === "days until halloween") {
-    const today = new Date();
-    const nextHalloween = new Date(today.getFullYear(), 9, 31);
-    if (today.getMonth() === 9 && today.getDate() > 31) {
-      nextHalloween.setFullYear(nextHalloween.getFullYear() + 1);
-    }
-    const oneDay = 1000 * 60 * 60 * 24;
-    const daysUntilHalloween = Math.ceil(
-      365 + (nextHalloween.getTime() - today.getTime()) / oneDay
-    );
-    message.reply(`There are ${daysUntilHalloween} days until Halloween!`);
+  // "what is the date?" command
+  if (
+    msg === "what is the date?" ||
+    msg === "what is the date" ||
+    msg === "date" ||
+    msg === "current date" ||
+    msg === "whats the date" ||
+    msg === "whats the current date"
+  ) {
+    let date = today.getDate();
+    let month = today.getMonth() + 1;
+    let year = today.getFullYear();
+
+    let fullDate = `${month}/${date}/${year}`;
+    message.reply(`Today's date is ${fullDate}!`);
   }
 
-  // "days until thanksgiving" command
-  if (msg === "days until thanksgiving") {
-    const today = new Date();
-    const nextThanksgiving = new Date(today.getFullYear(), 10, 26);
-    if (today.getMonth() === 10 && today.getDate() > 26) {
-      nextThanksgiving.setFullYear(nextThanksgiving.getFullYear() + 1);
-    }
-    const oneDay = 1000 * 60 * 60 * 24;
-    const daysUntilThanksgiving = Math.ceil(
-      365 + (nextThanksgiving.getTime() - today.getTime()) / oneDay
-    );
-    message.reply(
-      `There are ${daysUntilThanksgiving} days until Thanksgiving!`
-    );
-  }
+  //
 
-  // "days until easter" command
-  if (msg === "days until easter") {
-    const today = new Date();
-    const nextEaster = new Date(today.getFullYear(), 3, 4);
-    if (today.getMonth() === 3 && today.getDate() > 4) {
-      nextEaster.setFullYear(nextEaster.getFullYear() + 1);
-    }
-    const oneDay = 1000 * 60 * 60 * 24;
-    const daysUntilEaster = Math.ceil(
-      365 + (nextEaster.getTime() - today.getTime()) / oneDay
-    );
-    message.reply(`There are ${daysUntilEaster} days until Easter!`);
-  }
+  // "days until" command
+  if (msg.startsWith("days until")) {
+    const event = msg.split("days until")[1].trim();
+    const eventDate = new Date(getFullYear(), 0, 1);
 
-  // "days until 4th of july" command
-  if (msg === "days until 4th of july") {
-    const today = new Date();
-    const next4thOfJuly = new Date(today.getFullYear(), 6, 4);
-    if (today.getMonth() === 6 && today.getDate() > 4) {
-      next4thOfJuly.setFullYear(next4thOfJuly.getFullYear() + 1);
-    }
+    // oneDay helper function
     const oneDay = 1000 * 60 * 60 * 24;
-    const daysUntil4thOfJuly = Math.ceil(
-      365 + (next4thOfJuly.getTime() - today.getTime()) / oneDay
-    );
-    message.reply(`There are ${daysUntil4thOfJuly} days until 4th of July!`);
-  }
 
-  // "days until memorial day" command
-  if (msg === "days until memorial day") {
-    const today = new Date();
-    const nextMemorialDay = new Date(today.getFullYear(), 4, 31);
-    if (today.getMonth() === 4 && today.getDate() > 31) {
-      nextMemorialDay.setFullYear(nextMemorialDay.getFullYear() + 1);
+    // Leap year function to prevent the bot from crashing on Feb 29th
+    const isLeapYear =
+      (getFullYear() % 4 === 0 && getFullYear() % 100 !== 0) ||
+      getFullYear() % 400 === 0;
+    if (isLeapYear) {
+      if (eventDate.getMonth() === 1 && eventDate.getDate() === 29) {
+        eventDate.setDate(28);
+      }
     }
-    const oneDay = 1000 * 60 * 60 * 24;
-    const daysUntilMemorialDay = Math.ceil(
-      365 + (nextMemorialDay.getTime() - today.getTime()) / oneDay
+
+    // check to see if next year is a Leap year
+    if (eventDate.getMonth() === 1 && eventDate.getDate() === 29) {
+      if (getFullYear() % 4 !== 0) {
+        eventDate.setFullYear(eventDate.getFullYear() + 1);
+      }
+    }
+
+    if (event === "christmas" || event === "xmas") {
+      eventDate.setMonth(11);
+      eventDate.setDate(25);
+    }
+    if (event === "new years" || event === "new years eve" || event === "nye") {
+      eventDate.setMonth(11);
+      eventDate.setDate(31);
+    }
+    if (event === "my birthday" || event === "my bday" || event === "bday") {
+      eventDate.setMonth(3);
+      eventDate.setDate(8);
+    }
+    if (
+      event === "halloween" ||
+      event === "halloween day" ||
+      event === "spooky"
+    ) {
+      eventDate.setMonth(9);
+      eventDate.setDate(31);
+    }
+    if (
+      event === "valentines day" ||
+      event === "valentines" ||
+      event === "valentine"
+    ) {
+      eventDate.setMonth(1);
+      eventDate.setDate(14);
+    }
+    if (event === "thanksgiving" || event === "turkey day") {
+      eventDate.setMonth(10);
+      eventDate.setDate(23);
+    }
+    if (
+      event === "easter" ||
+      event === "easter day" ||
+      event === "easter egg" ||
+      event === "easter sunday"
+    ) {
+      eventDate.setMonth(3);
+      eventDate.setDate(9);
+    }
+    if (
+      event === "4th of july" ||
+      event === "july 4th" ||
+      event === "july 4" ||
+      event === "4 of july" ||
+      event === "independence day" ||
+      event === "independence"
+    ) {
+      eventDate.setMonth(6);
+      eventDate.setDate(4);
+    }
+    if (event === "memorial day" || event === "memorial") {
+      eventDate.setMonth(4);
+      eventDate.setDate(29);
+    }
+    if (event === "labor day" || event === "labor") {
+      eventDate.setMonth(8);
+      eventDate.setDate(4);
+    }
+    if (event === "mothers day" || event === "mothers") {
+      eventDate.setMonth(4);
+      eventDate.setDate(14);
+    }
+    if (event === "fathers day" || event === "fathers") {
+      eventDate.setMonth(5);
+      eventDate.setDate(18);
+    }
+    if (event === "columbus day" || event === "columbus") {
+      eventDate.setMonth(9);
+      eventDate.setDate(12);
+    }
+    if (event === "groundhog day" || event === "groundhog") {
+      eventDate.setMonth(1);
+      eventDate.setDate(2);
+    }
+    if (event === "st patricks day" || event === "st patricks") {
+      eventDate.setMonth(2);
+      eventDate.setDate(17);
+    }
+    if (
+      event === "cinco de mayo" ||
+      event === "cinco" ||
+      event === "may 5th" ||
+      event === "may 5" ||
+      event === "cinco de mayo day"
+    ) {
+      eventDate.setMonth(4);
+      eventDate.setDate(5);
+    }
+    if (event === "good friday" || event === "good") {
+      eventDate.setMonth(3);
+      eventDate.setDate(7);
+    }
+    if (event === "black friday") {
+      eventDate.setMonth(10);
+      eventDate.setDate(24);
+    }
+    if (event === "cyber monday") {
+      eventDate.setMonth(10);
+      eventDate.setDate(27);
+    }
+    if (
+      event === "martin luther king day" ||
+      event === "martin luther king" ||
+      event === "mlk day" ||
+      event === "mlk"
+    ) {
+      eventDate.setMonth(0);
+      eventDate.setDate(16);
+    }
+    if (event === "presidents day" || event === "presidents") {
+      eventDate.setMonth(1);
+      eventDate.setDate(20);
+    }
+    if (event === "juneteenth") {
+      eventDate.setMonth(5);
+      eventDate.setDate(19);
+    }
+    if (event === "hannukah" || event === "hanukkah") {
+      eventDate.setMonth(11);
+      eventDate.setDate(10);
+    }
+    if (event === "yom kippur") {
+      eventDate.setMonth(9);
+      eventDate.setDate(18);
+    }
+    if (event === "rosh hashanah") {
+      eventDate.setMonth(8);
+      eventDate.setDate(7);
+    }
+    if (event === "passover") {
+      eventDate.setMonth(3);
+      eventDate.setDate(8);
+    }
+    if (event === "earth day" || event === "earth") {
+      eventDate.setMonth(3);
+      eventDate.setDate(22);
+    }
+    if (event === "mardi gras" || event === "mardi" || event === "carnival") {
+      eventDate.setMonth(1);
+      eventDate.setDate(21);
+    }
+    if (event === "tax day" || event === "tax") {
+      eventDate.setMonth(3);
+      eventDate.setDate(18);
+    }
+
+    // calculate the days until the event, and factor in both current year, as well as if next year is a leap year, and add total days to eventDate if occuring next year
+    if (eventDate.getMonth() === 1 && eventDate.getDate() === 29) {
+      if (getFullYear() % 4 !== 0) {
+        eventDate.setFullYear(eventDate.getFullYear() + 1);
+      }
+    }
+
+    const daysUntilEvent = Math.ceil(
+      (eventDate.getTime() - today.getTime()) / oneDay
     );
-    message.reply(`There are ${daysUntilMemorialDay} days until Memorial Day!`);
+    if (daysUntilEvent === 0) {
+      message.reply(`Happy ${event} 🎉 🥳 🎊 🥂 🍾!`);
+    }
+
+    // if event is today
+    if (daysUntilEvent === 1) {
+      message.reply(`Tomorrow is ${event}!`);
+    }
+
+    // if event is in less than 7 days, list days until event
+    if (daysUntilEvent < 7 && daysUntilEvent > 1) {
+      message.reply(`There are ${daysUntilEvent} days until ${event}!`);
+    }
+
+    // if event is before today's date, calculate days until event and add getfullYear to account for next year
+    if (eventDate.getTime() < today.getTime()) {
+      eventDate.setFullYear(eventDate.getFullYear() + 1);
+      const daysUntilEvent = Math.ceil(
+        (eventDate.getTime() - today.getTime()) / oneDay
+      );
+      message.reply(
+        `There are ${daysUntilEvent} days until the next ${event}! _(for ${
+          getFullYear() + 1
+        })_`
+      );
+    }
+
+    // send automated message day of event without user input
+    if (daysUntilEvent === 0) {
+      const channel = client.channels.cache.get(DISCORD_SERVER_ID);
+      channel.send(`Happy ${event} 🎉 🥳 🎊 🥂 🍾!`);
+      message.channel.send(`Happy ${event} 🎉 🥳 🎊 🥂 🍾!`);
+    }
   }
 
   // ======================================================== //
@@ -1239,24 +1415,85 @@ client.on("messageCreate", (message) => {
   // ======================================================== //
   // ======================================================== //
 
-  // get current date
-  if (msg === "what is the date" || msg === "whats the date") {
-    const today = new Date();
-    const date = today.getDate();
-    const month = today.getMonth() + 1;
-    const year = today.getFullYear();
-    message.reply(`Today is ${month}/${date}/${year}`);
+  // get current time based on AM & PM in 00:00 format
+  // today is declared at the top of current object
+  const time = today.toLocaleString("en-US", {
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+  });
+  if (
+    msg === "what time is it" ||
+    msg === "whats the time" ||
+    msg === "time" ||
+    msg === "current time"
+  ) {
+    message.reply(`It is currently ${time}`);
   }
 
-  // get current time based on AM & PM in 00:00 format
-  if (msg === "what time is it") {
-    const today = new Date();
-    const time = today.toLocaleString("en-US", {
+  // current time in PST
+  if (
+    msg === "what time is it in pst" ||
+    msg === "time in pst" ||
+    msg === "pst" ||
+    msg === "pacific time" ||
+    msg === "pacific"
+  ) {
+    const pst = today.toLocaleString("en-US", {
+      timeZone: "America/Los_Angeles",
       hour: "numeric",
       minute: "numeric",
       hour12: true,
     });
-    message.reply(`It is currently ${time}`);
+    message.reply(`It is currently ${pst} in PST`);
+  }
+  // current time in MT
+  if (
+    msg === "what time is it in mt" ||
+    msg === "time in mt" ||
+    msg === "mt" ||
+    msg === "mountain time" ||
+    msg === "mountain"
+  ) {
+    const mt = today.toLocaleString("en-US", {
+      timeZone: "America/Denver",
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    });
+    message.reply(`It is currently ${mt} in MT`);
+  }
+  // current time in EST
+  if (
+    msg === "what time is it in est" ||
+    msg === "time in est" ||
+    msg === "est" ||
+    msg === "eastern time" ||
+    msg === "eastern"
+  ) {
+    const est = today.toLocaleString("en-US", {
+      timeZone: "America/New_York",
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    });
+    message.reply(`It is currently ${est} in EST`);
+  }
+  // current time in CST
+  if (
+    msg === "what time is it in cst" ||
+    msg === "time in cst" ||
+    msg === "cst" ||
+    msg === "central time" ||
+    msg === "central"
+  ) {
+    const cst = today.toLocaleString("en-US", {
+      timeZone: "America/Chicago",
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    });
+    message.reply(`It is currently ${cst} in CST`);
   }
 
   // ======================================================== //
