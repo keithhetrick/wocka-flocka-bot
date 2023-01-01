@@ -27,6 +27,7 @@ const words = require("./jsonFiles/words.json");
 const dictionary = require("./jsonFiles/dictionary.json");
 const coffee = require("./jsonFiles/coffeeGif.json");
 const memes = require("./jsonFiles/memes.json");
+const calendarYear = require("./jsonFiles/calendarYear.json");
 
 // .env & API keys
 const WEATHER_API_KEY = process.env.OPEN_WEATHER_API_KEY;
@@ -1196,6 +1197,33 @@ client.on("messageCreate", (message) => {
   // "today" variable
   const today = new Date();
 
+  // "month" variable
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  // "day" variable
+  const days = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+
   // "what year is it?" command
   if (
     msg === "what year is it?" ||
@@ -1214,20 +1242,6 @@ client.on("messageCreate", (message) => {
     msg === "whats the month" ||
     msg === "current month"
   ) {
-    const months = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
     message.reply(`It's ${months[today.getMonth()]}!`);
   }
 
@@ -1238,15 +1252,6 @@ client.on("messageCreate", (message) => {
     msg === "current day" ||
     msg === "whats the current day"
   ) {
-    const days = [
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-    ];
     message.reply(`It's ${days[today.getDay()]}!`);
   }
 
@@ -1259,13 +1264,6 @@ client.on("messageCreate", (message) => {
     msg === "whats the date" ||
     msg === "whats the current date"
   ) {
-    // let date = today.getDate();
-    // let month = today.getMonth() + 1;
-    // let year = today.getFullYear();
-
-    // let fullDate = `${month}/${date}/${year}`;
-    // message.reply(`Today's date is ${fullDate}!`);
-
     const currentDate = new Date();
     message.channel.send(
       `Today is ${currentDate.toLocaleString("en-US", {
@@ -1285,12 +1283,9 @@ client.on("messageCreate", (message) => {
   ) {
     // regex to remove user input from the message
     let event = msg.replace(/days until|when is|whens/gi, "").trim();
-
     console.log("EVENT: ", event);
-    const eventDate = new Date(getFullYear(), 0, 1);
 
-    // oneDay helper function
-    const oneDay = 1000 * 60 * 60 * 24;
+    const eventDate = new Date(getFullYear(), 0, 1);
 
     // Leap year function to prevent the bot from crashing on Feb 29th
     const isLeapYear =
@@ -1550,6 +1545,16 @@ client.on("messageCreate", (message) => {
       );
     } else {
       // send message with event date and days count
+      console.log(
+        "RESPONSE: ",
+        `The next ${event} is on ${eventDate.toLocaleDateString("en-US", {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })}, which is ${daysUntilEvent} days away!`
+      );
+
       message.channel.send(
         `The next **${event}** is on _${eventDate.toLocaleDateString("en-US", {
           weekday: "long",
