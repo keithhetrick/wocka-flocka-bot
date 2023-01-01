@@ -1179,10 +1179,8 @@ client.on("messageCreate", (message) => {
     let year = today.getFullYear();
 
     let fullDate = `${month}/${date}/${year}`;
-    message.reply(`Today's date is ${fullDate}!`);
+    message.reply(`Today's date is ${fullDate}`);
   }
-
-  //
 
   // "days until" command
   if (msg.startsWith("days until")) {
@@ -1368,7 +1366,7 @@ client.on("messageCreate", (message) => {
       (eventDate.getTime() - today.getTime()) / oneDay
     );
     if (daysUntilEvent === 0) {
-      message.reply(`Happy ${event} 🎉 🥳 🎊 🥂 🍾!`);
+      message.reply(`Happy ${event} 🎉 🥳 🎊 🥂 🍾`);
     }
 
     // if event is today
@@ -1377,9 +1375,9 @@ client.on("messageCreate", (message) => {
     }
 
     // if event is in less than 7 days, list days until event
-    if (daysUntilEvent < 7 && daysUntilEvent > 1) {
-      message.reply(`There are ${daysUntilEvent} days until ${event}!`);
-    }
+    // if (daysUntilEvent < 7 && daysUntilEvent > 1) {
+    //   message.reply(`There are ${daysUntilEvent} days until ${event}!`);
+    // }
 
     // if event is before today's date, calculate days until event and add getfullYear to account for next year
     if (eventDate.getTime() < today.getTime()) {
@@ -1388,18 +1386,18 @@ client.on("messageCreate", (message) => {
         (eventDate.getTime() - today.getTime()) / oneDay
       );
       message.reply(
-        `There are ${daysUntilEvent} days until the next ${event}! _(for ${
+        `There are ${daysUntilEvent} days until the next ${event}! _(for the year ${
           getFullYear() + 1
         })_`
       );
     }
 
     // send automated message day of event without user input
-    if (daysUntilEvent === 0) {
-      const channel = client.channels.cache.get(DISCORD_SERVER_ID);
-      channel.send(`Happy ${event} 🎉 🥳 🎊 🥂 🍾!`);
-      message.channel.send(`Happy ${event} 🎉 🥳 🎊 🥂 🍾!`);
-    }
+    //   if (daysUntilEvent === 0) {
+    //     const channel = client.channels.cache.get(DISCORD_SERVER_ID);
+    //     channel.send(`Happy ${event} 🎉 🥳 🎊 🥂 🍾!`);
+    //     message.channel.send(`Happy ${event} 🎉 🥳 🎊 🥂 🍾!`);
+    //   }
   }
 
   // ======================================================== //
@@ -1415,9 +1413,10 @@ client.on("messageCreate", (message) => {
   // ======================================================== //
   // ======================================================== //
 
-  // get current time based on AM & PM in 00:00 format
+  // current time in AM & PM/00:00 format
   // today is declared at the top of current object
   const time = today.toLocaleString("en-US", {
+    timeZone: "America/Chicago",
     hour: "numeric",
     minute: "numeric",
     hour12: true,
