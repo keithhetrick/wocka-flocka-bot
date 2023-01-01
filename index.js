@@ -71,95 +71,70 @@ client.on("messageDelete", (message) => {
 const helpMessageEmbeded = {
   color: 0x0099ff,
   title: "Wocka-Flocka Help Commands",
-  url: "https://discord.js.org",
+  url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
   author: {
     name: "Wocka-Flocka",
-    icon_url: "https://i.imgur.com/AfFp7pu.png",
-    url: "https://discord.js.org",
+    icon_url:
+      "https://cdn.discordapp.com/avatars/1028153221040050216/71f4bd7e3c430b2ba5e5efed026fba3e.webp?size=240",
+    url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
   },
   description: "List of help commands for Wocka-Flocka",
   thumbnail: {
-    url: "https://i.imgur.com/AfFp7pu.png",
+    url: "https://cdn.discordapp.com/avatars/1028153221040050216/71f4bd7e3c430b2ba5e5efed026fba3e.webp?size=240",
   },
   fields: [
     {
       name: "!help",
       value: "List of avaliable commands",
+      inline: false,
     },
     {
       name: "!resources",
-      value: "List of avaliable resources",
+      value: "List of avaliable tech-related resources",
+      inline: false,
     },
     {
       name: "!games",
       value: "List of avaliable games",
-    },
-    {
-      name: "\u200b",
-      value: "**HOLIDAY TRACKER**",
       inline: false,
     },
     {
-      name: "days until christmas",
-      value: "Tells you how many days until Christmas",
-      inline: true,
-    },
-    {
-      name: "days until easter",
-      value: "Tells you how many days until Easter",
-      inline: true,
-    },
-    {
-      name: "days until halloween",
-      value: "Tells you how many days until Halloween",
-      inline: true,
-    },
-    {
-      name: "days until thanksgiving",
-      value: "Tells you how many days until Thanksgiving",
-      inline: true,
-    },
-    {
-      name: "days until valentines day",
-      value: "Tells you how many days until Valentines Day",
-      inline: true,
-    },
-    {
-      name: "days until new years",
-      value: "Tells you how many days until New Years Eve",
-      inline: true,
-    },
-    {
-      name: "days until 4th of july",
-      value: "Tells you how many days until the 4th of July",
-      inline: true,
-    },
-    {
-      name: "days until memorial day",
-      value: "Tells you how many days until Memorial Day",
-      inline: true,
-    },
-    {
-      name: "\u200b",
-      value: "**WEATHER, TIME ZONE & LOCATION TRACKER**",
+      name: "!holidays",
+      value: "List of holidays commands",
       inline: false,
     },
     {
-      name: "what is the weather like",
-      value: "Wocka-Flocka will tell you the weather in your area",
+      name: "\u200b",
+      value:
+        "---------------------------------------------- \n ***OTHER INTERACTIVE OPTIONS*** \n ----------------------------------------------",
+      inline: false,
     },
     {
-      name: "what time is it in EST/CST/MST/PST (pick one)",
-      value: "Wocka-Flocka will tell you the time in the selected time zone",
+      name: "\u200b",
+      value: "**HOLIDAY TRACKER** - list of holidays",
+      inline: false,
+    },
+    {
+      name: "\u200b",
+      value:
+        "**WEATHER, TIME ZONE & LOCATION TRACKER** \n - get time by zone, and current weather by location",
+      inline: false,
+    },
+    {
+      name: "\u200b",
+      value:
+        "**DICTIONARY** - type '***define*** __*word*__ ' to search in the dictionary",
+      inline: false,
     },
   ],
   image: {
-    url: "https://i.imgur.com/AfFp7pu.png",
+    url: "https://cdn.discordapp.com/avatars/1028153221040050216/71f4bd7e3c430b2ba5e5efed026fba3e.webp?size=240",
   },
   timestamp: new Date().toISOString(),
   footer: {
     text: "Bot creator: Keith Hetrick",
-    icon_url: "https://i.imgur.com/AfFp7pu.png",
+    icon_url:
+      "https://cdn.discordapp.com/avatars/1028153221040050216/71f4bd7e3c430b2ba5e5efed026fba3e.webp?size=240",
   },
 };
 const channel = client.channels.cache.get(DISCORD_SERVER_ID);
@@ -181,27 +156,26 @@ client.on("messageCreate", async (message) => {
 const gameMessageEmbeded = {
   color: 0x0099ff,
   title: "Wocka-Flocka Game Commands",
-  url: "https://discord.js.org",
+  url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
   author: {
     name: "Wocka-Flocka",
-    icon_url: "https://i.imgur.com/AfFp7pu.png",
-    url: "https://discord.js.org",
+    icon_url:
+      "https://cdn.discordapp.com/avatars/1028153221040050216/71f4bd7e3c430b2ba5e5efed026fba3e.webp?size=240",
+    url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
   },
   description: "List of game commands for Wocka-Flocka",
   thumbnail: {
-    url: "https://i.imgur.com/AfFp7pu.png",
+    url: "https://cdn.discordapp.com/avatars/1028153221040050216/71f4bd7e3c430b2ba5e5efed026fba3e.webp?size=240",
   },
   fields: [
-    // blank field
-
     {
       name: "\u200b",
-      value: "**GAMES & FUN**",
+      value: "***GAMES & FUN***",
       inline: false,
     },
     {
       name: "tell me a joke",
-      value: "Dad joke or rad joke? Their goos because their terrible",
+      value: "Dad joke or rad joke? They're good BECAUSE they're bad",
       inline: true,
     },
     {
@@ -221,7 +195,7 @@ const gameMessageEmbeded = {
     },
     {
       name: "flip a coin",
-      value: "Wocka Flocka flips a coin",
+      value: "Call it in the air, heads or tails?",
       inline: true,
     },
     {
@@ -241,32 +215,27 @@ const gameMessageEmbeded = {
     },
     {
       name: "pick a number",
-      value: "Wocka-Flocka can't pick your nose, but it can pick a number",
+      value: "Wocka-Flocka can't pick your nose, but it CAN pick a number",
       inline: true,
     },
     {
       name: "random word",
-      value: "Wocka-Flocka will give you a random word",
+      value: "So you want a random word? Okay I guess",
       inline: true,
     },
     {
       name: "random insult",
-      value: "Wocka-Flocka will give you a random insult",
+      value: "Hurt me more daddy, insult me",
       inline: true,
     },
     {
       name: "random compliment",
-      value: "Wocka-Flocka will give you a random compliment",
+      value: "Wocka-Flocka will butter you up",
       inline: true,
     },
     {
-      name: "random developer fact",
-      value: "Wocka-Flocka will give you a random developer fact",
-      inline: true,
-    },
-    {
-      name: "define",
-      value: "Wocka-Flocka will define a word for you",
+      name: "random dev fact",
+      value: "How about a random dev fact?",
       inline: true,
     },
     {
@@ -276,27 +245,27 @@ const gameMessageEmbeded = {
     },
     {
       name: "pick a card",
-      value: "Wocka-Flocka will pick a card for you",
+      value: "Pick a card, not your nose",
       inline: true,
     },
     {
       name: "tell me a story",
-      value: "Wocka-Flocka will tell you a story",
+      value: "Storytime with Wocka-Flocka!",
       inline: true,
     },
     {
       name: "tell me a poem",
-      value: "Wocka-Flocka will tell you a poem",
+      value: "He's a poet & didn't know it",
       inline: true,
     },
     {
       name: "tell me a riddle",
-      value: "Wocka-Flocka will tell you a riddle",
+      value: "Riddle me this, Batman!",
       inline: true,
     },
     {
       name: "coffee",
-      value: "shows random gif of coffee",
+      value: "shows random coffee GIF's",
       inline: true,
     },
     {
@@ -306,16 +275,15 @@ const gameMessageEmbeded = {
     },
   ],
   image: {
-    url: "https://i.imgur.com/AfFp7pu.png",
+    url: "https://cdn.discordapp.com/avatars/1028153221040050216/71f4bd7e3c430b2ba5e5efed026fba3e.webp?size=240",
   },
   timestamp: new Date().toISOString(),
   footer: {
     text: "Bot creator: Keith Hetrick",
-    icon_url: "https://i.imgur.com/AfFp7pu.png",
+    icon_url:
+      "https://cdn.discordapp.com/avatars/1028153221040050216/71f4bd7e3c430b2ba5e5efed026fba3e.webp?size=240",
   },
 };
-// const channel = client.channels.cache.get(DISCORD_SERVER_ID);
-// channel.send({ embeds: [gameMessageEmbed] });
 
 // call the !help command to get a list of commands
 client.on("messageCreate", async (message) => {
@@ -332,84 +300,164 @@ client.on("messageCreate", async (message) => {
 
 const holidayMessageEmbeded = {
   color: 0x0099ff,
-  title: "Wocka-Flocka Holiday Commands",
-  url: "https://discord.js.org",
+  title: "Wocka-Flocka Holiday Countdown Commands",
+  url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
   author: {
     name: "Wocka-Flocka",
-    icon_url: "https://i.imgur.com/AfFp7pu.png",
-    url: "https://discord.js.org",
+    icon_url:
+      "https://cdn.discordapp.com/avatars/1028153221040050216/71f4bd7e3c430b2ba5e5efed026fba3e.webp?size=240",
+    url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
   },
   description: "List of holiday commands for Wocka-Flocka",
   thumbnail: {
-    url: "https://i.imgur.com/AfFp7pu.png",
+    url: "https://cdn.discordapp.com/avatars/1028153221040050216/71f4bd7e3c430b2ba5e5efed026fba3e.webp?size=240",
   },
   fields: [
     {
-      name: "\u200b",
-      value: "**HOLIDAY TRACKER**",
-      inline: false,
-    },
-    {
-      name: "days until christmas",
-      value: "Tells you how many days until Christmas",
+      name: "Christmas",
+      value: "Countdown to Christmas",
       inline: true,
     },
     {
-      name: "days until easter",
-      value: "Tells you how many days until Easter",
+      name: "Thanksgiving",
+      value: "Countdown to Thanksgiving",
       inline: true,
     },
     {
-      name: "days until halloween",
-      value: "Tells you how many days until Halloween",
+      name: "Good Friday",
+      value: "Countdown to Good Friday",
       inline: true,
     },
     {
-      name: "days until thanksgiving",
-      value: "Tells you how many days until Thanksgiving",
+      name: "Halloween",
+      value: "Countdown to Halloween",
       inline: true,
     },
     {
-      name: "days until valentines day",
-      value: "Tells you how many days until Valentines Day",
+      name: "New Years Eve",
+      value: "Countdown to New Years",
       inline: true,
     },
     {
-      name: "days until new years",
-      value: "Tells you how many days until New Years Eve",
+      name: "Valentines Day",
+      value: "Countdown to Valentines Day",
       inline: true,
     },
     {
-      name: "days until 4th of july",
-      value: "Tells you how many days until the 4th of July",
+      name: "Easter",
+      value: "Countdown to Easter",
       inline: true,
     },
     {
-      name: "days until memorial day",
-      value: "Tells you how many days until Memorial Day",
+      name: "4th of July",
+      value: "Countdown to 4th of July",
       inline: true,
     },
     {
-      name: "\u200b",
-      value: "**WEATHER, TIME ZONE & LOCATION TRACKER**",
-      inline: false,
+      name: "Memorial Day",
+      value: "Countdown to Memorial Day",
+      inline: true,
     },
     {
-      name: "what is the weather like",
-      value: "Wocka-Flocka will tell you the weather in your area",
+      name: "Labor Day",
+      value: "Countdown to Labor Day",
+      inline: true,
+    },
+    {
+      name: "Cinco de Mayo",
+      value: "Countdown to Cinco de Mayo",
+      inline: true,
+    },
+    {
+      name: "Independence Day",
+      value: "Countdown to Independence Day",
+      inline: true,
+    },
+    {
+      name: "Mother's Day",
+      value: "Countdown to Mother's Day",
+      inline: true,
+    },
+    {
+      name: "Father's Day",
+      value: "Countdown to Father's Day",
+      inline: true,
+    },
+    {
+      name: "St. Patrick's Day",
+      value: "Countdown to St. Patrick's Day",
+      inline: true,
+    },
+    {
+      name: "Columbus Day",
+      value: "Countdown to Columbus Day",
+      inline: true,
+    },
+    {
+      name: "Veterans Day",
+      value: "Countdown to Veterans Day",
+      inline: true,
+    },
+    {
+      name: "Martin Luther King Jr. Day",
+      value: "Countdown to MLK Day",
+      inline: true,
+    },
+    {
+      name: "Presidents Day",
+      value: "Countdown to Presidents Day",
+      inline: true,
+    },
+    {
+      name: "Mardi Gras",
+      value: "Countdown to Mardi Gras",
+      inline: true,
+    },
+    {
+      name: "Juneteenth",
+      value: "Countdown to Juneteenth",
+      inline: true,
+    },
+    {
+      name: "Hanukkah",
+      value: "Countdown to Hanukkah",
+      inline: true,
+    },
+    {
+      name: "Yom Kippur",
+      value: "Countdown to Yom Kippur",
+      inline: true,
+    },
+    {
+      name: "Rosh Hashanah",
+      value: "Countdown to Rosh Hashanah",
+      inline: true,
+    },
+    {
+      name: "Passover",
+      value: "Countdown to Passover",
+      inline: true,
+    },
+    {
+      name: "Earth Day",
+      value: "Countdown to Earth Day",
+      inline: true,
+    },
+    {
+      name: "Tax Day",
+      value: "Countdown to Tax Day",
+      inline: true,
     },
   ],
-  image: {
-    url: "https://i.imgur.com/AfFp7pu.png",
-  },
   timestamp: new Date().toISOString(),
   footer: {
     text: "Bot creator: Keith Hetrick",
-    icon_url: "https://i.imgur.com/AfFp7pu.png",
+    icon_url:
+      "https://cdn.discordapp.com/avatars/1028153221040050216/71f4bd7e3c430b2ba5e5efed026fba3e.webp?size=240",
   },
 };
 
-// call the !help command to get a list of commands
+// call the !holiday command to get a list of commands
 client.on("messageCreate", async (message) => {
   const msg = message.content.toLowerCase();
 
@@ -425,15 +473,16 @@ client.on("messageCreate", async (message) => {
 const resourceMessageEmbeded = {
   color: 0x0099ff,
   title: "Wocka-Flocka Resouce Commands",
-  url: "https://discord.js.org",
+  url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
   author: {
     name: "Wocka-Flocka",
-    icon_url: "https://i.imgur.com/AfFp7pu.png",
-    url: "https://discord.js.org",
+    icon_url:
+      "https://cdn.discordapp.com/avatars/1028153221040050216/71f4bd7e3c430b2ba5e5efed026fba3e.webp?size=240",
+    url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
   },
   description: "List of commands for Algorithm, Data Structures and more!",
   thumbnail: {
-    url: "https://i.imgur.com/AfFp7pu.png",
+    url: "https://cdn.discordapp.com/avatars/1028153221040050216/71f4bd7e3c430b2ba5e5efed026fba3e.webp?size=240",
   },
   fields: [
     {
@@ -470,12 +519,13 @@ const resourceMessageEmbeded = {
     },
   ],
   image: {
-    url: "https://i.imgur.com/AfFp7pu.png",
+    url: "https://cdn.discordapp.com/avatars/1028153221040050216/71f4bd7e3c430b2ba5e5efed026fba3e.webp?size=240",
   },
   timestamp: new Date().toISOString(),
   footer: {
     text: "Bot creator: Keith Hetrick",
-    icon_url: "https://i.imgur.com/AfFp7pu.png",
+    icon_url:
+      "https://cdn.discordapp.com/avatars/1028153221040050216/71f4bd7e3c430b2ba5e5efed026fba3e.webp?size=240",
   },
 };
 
@@ -563,7 +613,7 @@ client.login(TOKEN);
 //   timestamp: new Date(),
 //   footer: {
 //     text: "Wocka-Flocka",
-//     icon_url: "https://i.imgur.com/AfFp7pu.png",
+//     icon_url: "https://cdn.discordapp.com/avatars/1028153221040050216/71f4bd7e3c430b2ba5e5efed026fba3e.webp?size=240",
 //   },
 // };
 
@@ -593,7 +643,7 @@ client.login(TOKEN);
 //         timestamp: new Date(),
 //         footer: {
 //           text: "Wocka-Flocka",
-//           icon_url: "https://i.imgur.com/AfFp7pu.png",
+//           icon_url: "https://cdn.discordapp.com/avatars/1028153221040050216/71f4bd7e3c430b2ba5e5efed026fba3e.webp?size=240",
 //         },
 //       },
 //     ],
@@ -623,7 +673,8 @@ client.on("messageCreate", (message) => {
           timestamp: new Date(),
           footer: {
             text: "Wocka-Flocka",
-            icon_url: "https://i.imgur.com/AfFp7pu.png",
+            icon_url:
+              "https://cdn.discordapp.com/avatars/1028153221040050216/71f4bd7e3c430b2ba5e5efed026fba3e.webp?size=240",
           },
         },
       ],
@@ -655,49 +706,73 @@ client.on("messageCreate", (message) => {
   }
 });
 
-// AUTOMATED "QUOTE OF THE DAY" MESSAGE one time, every 24 hours at 9 am
-// const schedule = require("node-schedule");
+// AUTOMATED "QUOTE OF THE DAY" MESSAGE once, every 24 hours at 9 am using node-schedule
 const quote = require("./jsonFiles/quotes.json");
 const randomQuote = quote[Math.floor(Math.random() * quote.length)];
 
-// use only one quote per day
-const quoteOfTheDay = schedule.scheduleJob("0 9 * * *", async function () {
-  // const channel = client.channels.cache.get(DISCORD_SERVER_ID);
-  message.channel
-    .send({
-      embeds: [
-        {
-          title: "Quote of the day:",
-          description: `"${randomQuote.quote}"`,
-          fields: [
-            {
-              name: "Author:",
-              value: `${randomQuote.author}`,
-            },
-          ],
-          timestamp: new Date(),
-          footer: {
-            text: "Wocka-Flocka",
-            icon_url: "hutps://i.imgur.com/AfFp7pu.png",
-          },
-        },
-      ],
-    })
-    .then((msg) => {
-      console.log(`Quote of the day sent to ${msg.channel.name}`);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+const rule = new schedule.RecurrenceRule();
+rule.dayOfWeek = [new schedule.Range(0, 6)];
+rule.hour = 9;
+rule.minute = 0;
+
+// if no author is listed, use "Unknown"
+if (
+  randomQuote.quoteAuthor === undefined ||
+  randomQuote.quoteAuthor === "" ||
+  randomQuote.quoteAuthor === null ||
+  randomQuote.quoteAuthor === " "
+) {
+  randomQuote.quoteAuthor = "Unknown";
+}
+schedule.scheduleJob(rule, function () {
+  message.channel.send(
+    `"${randomQuote.quoteText}" - ${randomQuote.quoteAuthor}`
+  );
 });
 
-client.on("messageCreate", async (message) => {
-  const msg = message.content.toLowerCase();
+// client.on("messageCreate", async (message) => {
+//   const msg = message.content.toLowerCase();
 
-  if (msg === "!quote-test") {
-    await message.reply({ embeds: [quoteOfTheDay] });
-  }
-});
+//   if (msg === "!quote-test") {
+//     await message.channel.send(
+//       "Be yourself; everyone else is already taken. - Oscar Wilde"
+//     );
+//   }
+// });
+
+// const quote = require("./jsonFiles/quotes.json");
+// const randomQuote = quote[Math.floor(Math.random() * quote.length)];
+
+// // use only one quote per day
+// const quoteOfTheDay = schedule.scheduleJob("0 9 * * *", async function () {
+//   // const channel = client.channels.cache.get(DISCORD_SERVER_ID);
+//   message.channel
+//     .send({
+//       embeds: [
+//         {
+//           title: "Quote of the day:",
+//           description: `"${randomQuote.quote}"`,
+//           fields: [
+//             {
+//               name: "Author:",
+//               value: `${randomQuote.author}`,
+//             },
+//           ],
+//           timestamp: new Date(),
+//           footer: {
+//             text: "Wocka-Flocka",
+//             icon_url: "hutps://i.imgur.com/AfFp7pu.png",
+//           },
+//         },
+//       ],
+//     })
+//     .then((msg) => {
+//       console.log(`Quote of the day sent to ${msg.channel.name}`);
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//     });
+// });
 
 // ======================================================== //
 // ======================================================== //
@@ -964,54 +1039,6 @@ client.on("messageCreate", (message) => {
     message.reply(randomCompliment);
   }
 
-  // Dictionary functionality
-  if (msg.startsWith("define")) {
-    const word = msg.slice(7).trim();
-    const definition = dictionary[word];
-    const prefixMessage = `The definition of ${word} is: \n\n`;
-
-    if (
-      word === undefined ||
-      word === "" ||
-      word === null ||
-      word.length === 0
-    ) {
-      message.reply("Sorry, enter a different word!");
-    }
-    if (dictionary[word] === undefined) {
-      message.reply(`Sorry, I don't know the definition of ${word}!`);
-    }
-    if (msg === "define") {
-      message.reply("Sorry, enter a different word!");
-    }
-    if (
-      definition === undefined ||
-      definition === "" ||
-      definition === null ||
-      definition.length === undefined
-    ) {
-      message.reply(`Sorry, I don't know the definition of ${word}!`);
-    }
-    if (definition.length <= 2000) {
-      message.reply(prefixMessage + definition);
-    } else {
-      const messageLength = parseInt(prefixMessage.length);
-      const firstMessage = definition.substring(0, 2000 - messageLength);
-      const secondMessage = definition.substring(2000);
-      const standardMessage = prefixMessage + firstMessage;
-
-      message.reply(standardMessage);
-
-      if (definition.length > 2000 || secondMessage.length <= 2000) {
-        message.reply(
-          `The definition of ${word} is too long! Here's a link to the definition: https://www.merriam-webster.com/dictionary/${word}`
-        );
-      } else {
-        message.reply(secondMessage);
-      }
-    }
-  }
-
   // "coffee" command
   if (msg === "coffee") {
     const randomCoffee = coffee[Math.floor(Math.random() * coffee.length)];
@@ -1090,6 +1117,64 @@ client.on("messageCreate", (message) => {
   }
 
   // ======================================================== //
+  /*
+  ██████╗ ██╗ ██████╗████████╗██╗ ██████╗ ███╗   ██╗ █████╗ ██████╗ ██╗   ██╗     █████╗ ██╗      ██████╗  ██████╗ 
+  ██╔══██╗██║██╔════╝╚══██╔══╝██║██╔═══██╗████╗  ██║██╔══██╗██╔══██╗╚██╗ ██╔╝    ██╔══██╗██║     ██╔════╝ ██╔═══██╗
+  ██║  ██║██║██║        ██║   ██║██║   ██║██╔██╗ ██║███████║██████╔╝ ╚████╔╝     ███████║██║     ██║  ███╗██║   ██║
+  ██║  ██║██║██║        ██║   ██║██║   ██║██║╚██╗██║██╔══██║██╔══██╗  ╚██╔╝      ██╔══██║██║     ██║   ██║██║   ██║
+  ██████╔╝██║╚██████╗   ██║   ██║╚██████╔╝██║ ╚████║██║  ██║██║  ██║   ██║       ██║  ██║███████╗╚██████╔╝╚██████╔╝
+  ╚═════╝ ╚═╝ ╚═════╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝       ╚═╝  ╚═╝╚══════╝ ╚═════╝  ╚═════╝ 
+  */
+  // ======================================================== //
+
+  // Dictionary functionality
+  if (msg.startsWith("define")) {
+    const word = msg.slice(7).trim();
+    const definition = dictionary[word];
+    const prefixMessage = `The definition of ***${word}*** is: \n\n`;
+
+    // Error handling
+    if (
+      word === undefined ||
+      word === "" ||
+      word === null ||
+      word.length === 0
+    ) {
+      message.reply("No word was entered. Please enter a word to search!");
+    } else if (dictionary[word] === undefined) {
+      message.reply(`Sorry, I can't find the definition of *${word}*!`);
+    } else if (
+      definition === undefined ||
+      definition === "" ||
+      definition === null ||
+      definition.length === undefined
+    ) {
+      message.reply(`Sorry, I don't know the definition of ${word}!`);
+    } else if (definition?.length <= 2000) {
+      message.reply(prefixMessage + definition);
+    } else {
+      // check message length & split message if necessary
+      const messageLength = parseInt(prefixMessage?.length);
+      const firstMessage = definition?.substring(0, 2000 - messageLength);
+      const secondMessage = definition?.substring(2000);
+      const standardMessage = prefixMessage + firstMessage;
+
+      // main message
+      message.reply(standardMessage);
+
+      // secondary error handling
+      if (definition?.length > 2000 || secondMessage?.length <= 2000) {
+        message.reply(
+          `The definition of ${word} is too long! Here's a link to the definition: https://www.merriam-webster.com/dictionary/${word}`
+        );
+      } else {
+        // secondary message
+        message.reply(secondMessage);
+      }
+    }
+  }
+
+  // ======================================================== //
   // ======================================================== //
   /*
   ██╗  ██╗ ██████╗ ██╗     ██╗██████╗  █████╗ ██╗   ██╗    ████████╗██████╗  █████╗  ██████╗██╗  ██╗███████╗██████╗ 
@@ -1108,7 +1193,7 @@ client.on("messageCreate", (message) => {
     return today.getFullYear();
   };
 
-  // today variable
+  // "today" variable
   const today = new Date();
 
   // "what year is it?" command
@@ -1174,17 +1259,34 @@ client.on("messageCreate", (message) => {
     msg === "whats the date" ||
     msg === "whats the current date"
   ) {
-    let date = today.getDate();
-    let month = today.getMonth() + 1;
-    let year = today.getFullYear();
+    // let date = today.getDate();
+    // let month = today.getMonth() + 1;
+    // let year = today.getFullYear();
 
-    let fullDate = `${month}/${date}/${year}`;
-    message.reply(`Today's date is ${fullDate}`);
+    // let fullDate = `${month}/${date}/${year}`;
+    // message.reply(`Today's date is ${fullDate}!`);
+
+    const currentDate = new Date();
+    message.channel.send(
+      `Today is ${currentDate.toLocaleString("en-US", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })}`
+    );
   }
 
   // "days until" command
-  if (msg.startsWith("days until")) {
-    const event = msg.split("days until")[1].trim();
+  if (
+    msg.startsWith("days until") ||
+    msg.startsWith("when is") ||
+    msg.startsWith("whens")
+  ) {
+    // regex to remove user input from the message
+    let event = msg.replace(/days until|when is|whens/gi, "").trim();
+
+    console.log("EVENT: ", event);
     const eventDate = new Date(getFullYear(), 0, 1);
 
     // oneDay helper function
@@ -1200,7 +1302,7 @@ client.on("messageCreate", (message) => {
       }
     }
 
-    // check to see if next year is a Leap year
+    // check if next year is Leap year
     if (eventDate.getMonth() === 1 && eventDate.getDate() === 29) {
       if (getFullYear() % 4 !== 0) {
         eventDate.setFullYear(eventDate.getFullYear() + 1);
@@ -1211,12 +1313,12 @@ client.on("messageCreate", (message) => {
       eventDate.setMonth(11);
       eventDate.setDate(25);
     }
-    if (event === "new years" || event === "new years eve" || event === "nye") {
+    if (event === "new years eve" || event === "nye") {
       eventDate.setMonth(11);
       eventDate.setDate(31);
     }
     if (event === "my birthday" || event === "my bday" || event === "bday") {
-      eventDate.setMonth(3);
+      eventDate.setMonth(2);
       eventDate.setDate(8);
     }
     if (
@@ -1230,12 +1332,21 @@ client.on("messageCreate", (message) => {
     if (
       event === "valentines day" ||
       event === "valentines" ||
-      event === "valentine"
+      event === "valentine" ||
+      event === "love day" ||
+      event === "singles awareness day"
     ) {
       eventDate.setMonth(1);
       eventDate.setDate(14);
     }
-    if (event === "thanksgiving" || event === "turkey day") {
+    if (
+      event === "thanksgiving" ||
+      event === "turkey day" ||
+      event === "turkey" ||
+      event === "thanksgiving day" ||
+      event === "gobble gobble" ||
+      event === "gobble"
+    ) {
       eventDate.setMonth(10);
       eventDate.setDate(23);
     }
@@ -1292,10 +1403,27 @@ client.on("messageCreate", (message) => {
       event === "cinco" ||
       event === "may 5th" ||
       event === "may 5" ||
-      event === "cinco de mayo day"
+      event === "cinco de mayo day" ||
+      event === "mayo de cinco"
     ) {
       eventDate.setMonth(4);
       eventDate.setDate(5);
+    }
+    if (
+      event === "mexican independence day" ||
+      event === "mexican independence"
+    ) {
+      eventDate.setMonth(8);
+      eventDate.setDate(16);
+    }
+    if (
+      event === "dia de los muertos" ||
+      event === "dia de los muertos day" ||
+      event === "day of the dead" ||
+      event === "day of the dead day"
+    ) {
+      eventDate.setMonth(10);
+      eventDate.setDate(1);
     }
     if (event === "good friday" || event === "good") {
       eventDate.setMonth(3);
@@ -1355,49 +1483,82 @@ client.on("messageCreate", (message) => {
       eventDate.setDate(18);
     }
 
-    // calculate the days until the event, and factor in both current year, as well as if next year is a leap year, and add total days to eventDate if occuring next year
-    if (eventDate.getMonth() === 1 && eventDate.getDate() === 29) {
-      if (getFullYear() % 4 !== 0) {
-        eventDate.setFullYear(eventDate.getFullYear() + 1);
-      }
+    // ======================================================== //
+    // Days Until Event Countdown
+    // ======================================================== //
+
+    // daysUntilEvent variable
+    let daysUntilEvent = Math.ceil((eventDate - today) / (1000 * 60 * 60 * 24));
+
+    // if event is today, set daysUntilEvent to 0
+    if (daysUntilEvent < 0) {
+      daysUntilEvent = 0;
     }
 
-    const daysUntilEvent = Math.ceil(
-      (eventDate.getTime() - today.getTime()) / oneDay
-    );
-    if (daysUntilEvent === 0) {
-      message.reply(`Happy ${event} 🎉 🥳 🎊 🥂 🍾`);
-    }
-
-    // if event is today
+    // if event is tomorrow, set daysUntilEvent to 1
     if (daysUntilEvent === 1) {
-      message.reply(`Tomorrow is ${event}!`);
+      daysUntilEvent = 1;
     }
 
-    // if event is in less than 7 days, list days until event
-    // if (daysUntilEvent < 7 && daysUntilEvent > 1) {
-    //   message.reply(`There are ${daysUntilEvent} days until ${event}!`);
-    // }
+    // if event is today, set daysUntilEvent to "today"
+    if (daysUntilEvent === 0) {
+      daysUntilEvent = "today";
+    }
 
-    // if event is before today's date, calculate days until event and add getfullYear to account for next year
-    if (eventDate.getTime() < today.getTime()) {
-      eventDate.setFullYear(eventDate.getFullYear() + 1);
-      const daysUntilEvent = Math.ceil(
-        (eventDate.getTime() - today.getTime()) / oneDay
-      );
-      message.reply(
-        `There are ${daysUntilEvent} days until the next ${event}! _(for the year ${
-          getFullYear() + 1
-        })_`
+    // if event is tomorrow, set daysUntilEvent to "tomorrow"
+    if (daysUntilEvent === 1) {
+      daysUntilEvent = "tomorrow";
+    }
+
+    // ======================================================== //
+    /*
+   ██████╗ ██████╗ ██╗   ██╗███╗   ██╗████████╗██████╗  ██████╗ ██╗    ██╗███╗   ██╗     █████╗ ██╗      ██████╗  ██████╗ 
+  ██╔════╝██╔═══██╗██║   ██║████╗  ██║╚══██╔══╝██╔══██╗██╔═══██╗██║    ██║████╗  ██║    ██╔══██╗██║     ██╔════╝ ██╔═══██╗
+  ██║     ██║   ██║██║   ██║██╔██╗ ██║   ██║   ██║  ██║██║   ██║██║ █╗ ██║██╔██╗ ██║    ███████║██║     ██║  ███╗██║   ██║
+  ██║     ██║   ██║██║   ██║██║╚██╗██║   ██║   ██║  ██║██║   ██║██║███╗██║██║╚██╗██║    ██╔══██║██║     ██║   ██║██║   ██║
+  ╚██████╗╚██████╔╝╚██████╔╝██║ ╚████║   ██║   ██████╔╝╚██████╔╝╚███╔███╔╝██║ ╚████║    ██║  ██║███████╗╚██████╔╝╚██████╔╝
+   ╚═════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝   ╚═╝   ╚═════╝  ╚═════╝  ╚══╝╚══╝ ╚═╝  ╚═══╝    ╚═╝  ╚═╝╚══════╝ ╚═════╝  ╚═════╝ 
+    */
+    // ======================================================== //
+
+    // first letter of event response in chat is capitalized
+    event = event.charAt(0).toUpperCase() + event.slice(1);
+
+    // throw error if no input event
+    if (!event || event === " " || event === undefined) {
+      // style function that changes errorMessage to red
+      const style = (errorMessage) => `\`\`\`diff\n- ${errorMessage}\`\`\``;
+      message.channel.send(
+        style(
+          `Please enter a valid holiday or event!\n Use the command "!holidays" to view a list of trackable holidays.`
+        )
       );
     }
 
-    // send automated message day of event without user input
-    //   if (daysUntilEvent === 0) {
-    //     const channel = client.channels.cache.get(DISCORD_SERVER_ID);
-    //     channel.send(`Happy ${event} 🎉 🥳 🎊 🥂 🍾!`);
-    //     message.channel.send(`Happy ${event} 🎉 🥳 🎊 🥂 🍾!`);
-    //   }
+    // if event is mispelled, throw error
+    else if (
+      (eventDate.getFullYear() === today.getFullYear() &&
+        eventDate.getMonth() === today.getMonth() &&
+        eventDate.getDate() === today.getDate()) ||
+      event === null
+    ) {
+      const style = (errorMessage) => `\`\`\`diff\n- ${errorMessage}\`\`\``;
+      message.channel.send(
+        style(
+          `Please enter a valid holiday or event!\n Use the command "!holidays" to view a list of trackable holidays.`
+        )
+      );
+    } else {
+      // send message with event date and days count
+      message.channel.send(
+        `The next **${event}** is on _${eventDate.toLocaleDateString("en-US", {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })}_, which is **${daysUntilEvent}** days away!`
+      );
+    }
   }
 
   // ======================================================== //
@@ -1427,7 +1588,7 @@ client.on("messageCreate", (message) => {
     msg === "time" ||
     msg === "current time"
   ) {
-    message.reply(`It is currently ${time}`);
+    message.channel.send(`It is currently ${time} (CST)`);
   }
 
   // current time in PST
@@ -1444,7 +1605,7 @@ client.on("messageCreate", (message) => {
       minute: "numeric",
       hour12: true,
     });
-    message.reply(`It is currently ${pst} in PST`);
+    message.channel.send(`It is currently ${pst} in PST`);
   }
   // current time in MT
   if (
@@ -1460,7 +1621,7 @@ client.on("messageCreate", (message) => {
       minute: "numeric",
       hour12: true,
     });
-    message.reply(`It is currently ${mt} in MT`);
+    message.channel.send(`It is currently ${mt} in MT`);
   }
   // current time in EST
   if (
@@ -1476,7 +1637,7 @@ client.on("messageCreate", (message) => {
       minute: "numeric",
       hour12: true,
     });
-    message.reply(`It is currently ${est} in EST`);
+    message.channel.send(`It is currently ${est} in EST`);
   }
   // current time in CST
   if (
@@ -1492,7 +1653,7 @@ client.on("messageCreate", (message) => {
       minute: "numeric",
       hour12: true,
     });
-    message.reply(`It is currently ${cst} in CST`);
+    message.channel.send(`It is currently ${cst} in CST`);
   }
 
   // ======================================================== //
