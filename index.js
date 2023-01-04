@@ -11,7 +11,7 @@ const cleverbot = require("cleverbot-free");
 const { Client, GatewayIntentBits } = require("discord.js");
 require("dotenv").config();
 const axios = require("axios");
-const schedule = require("node-schedule");
+const cron = require("node-cron");
 
 // JSON files
 const jokes = require("./jsonFiles/jokes.json");
@@ -587,6 +587,44 @@ client.login(TOKEN);
 // ======================================================== //
 // ======================================================== //
 
+// AUTOMATED "QUOTE OF THE DAY" MESSAGE every 24 hours at 9 am using node-cron
+const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+
+cron.schedule("0 8 * * *", () => {
+  const message = {
+    reply: function (string) {
+      client.channels.cache.get("1028135751508033679").send(string);
+    },
+  };
+  if (
+    randomQuote.quoteAuthor === undefined ||
+    randomQuote.quoteAuthor === "" ||
+    randomQuote.quoteAuthor === null ||
+    randomQuote.quoteAuthor === " "
+  ) {
+    randomQuote.quoteAuthor = "Unknown";
+  }
+
+  console.log(
+    `Quote of the day:\r\n\n "${randomQuote.quoteText}"\r\n - ${randomQuote.quoteAuthor}.\r\n\n Have a great day!\r\n\n\r\n\n- Sent by Wocka-Flocka using node-cron`
+  );
+  // make reply a embeded message
+  message.reply({
+    embeds: [
+      {
+        title: "Quote of the day:",
+        description: `"${randomQuote.quoteText}"\r\n - ${randomQuote.quoteAuthor}.\r\n\n *Have a great day!*`,
+        timestamp: new Date(),
+        footer: {
+          text: "Wocka-Flocka",
+          icon_url:
+            "https://cdn.discordapp.com/avatars/1028153221040050216/71f4bd7e3c430b2ba5e5efed026fba3e.webp?size=240",
+        },
+      },
+    ],
+  });
+});
+
 // Welcome message to new members to the server
 // create manually welcome command for below message
 // client.on("guildMemberAdd", (member) => {
@@ -706,74 +744,6 @@ client.on("messageCreate", (message) => {
     console.log(`Total members: ${members.size}`);
   }
 });
-
-// AUTOMATED "QUOTE OF THE DAY" MESSAGE once, every 24 hours at 9 am using node-schedule
-const quote = require("./jsonFiles/quotes.json");
-const randomQuote = quote[Math.floor(Math.random() * quote.length)];
-
-const rule = new schedule.RecurrenceRule();
-rule.dayOfWeek = [new schedule.Range(0, 6)];
-rule.hour = 9;
-rule.minute = 0;
-
-// if no author is listed, use "Unknown"
-if (
-  randomQuote.quoteAuthor === undefined ||
-  randomQuote.quoteAuthor === "" ||
-  randomQuote.quoteAuthor === null ||
-  randomQuote.quoteAuthor === " "
-) {
-  randomQuote.quoteAuthor = "Unknown";
-}
-schedule.scheduleJob(rule, function () {
-  message.channel.send(
-    `"${randomQuote.quoteText}" - ${randomQuote.quoteAuthor}`
-  );
-});
-
-// client.on("messageCreate", async (message) => {
-//   const msg = message.content.toLowerCase();
-
-//   if (msg === "!quote-test") {
-//     await message.channel.send(
-//       "Be yourself; everyone else is already taken. - Oscar Wilde"
-//     );
-//   }
-// });
-
-// const quote = require("./jsonFiles/quotes.json");
-// const randomQuote = quote[Math.floor(Math.random() * quote.length)];
-
-// // use only one quote per day
-// const quoteOfTheDay = schedule.scheduleJob("0 9 * * *", async function () {
-//   // const channel = client.channels.cache.get(DISCORD_SERVER_ID);
-//   message.channel
-//     .send({
-//       embeds: [
-//         {
-//           title: "Quote of the day:",
-//           description: `"${randomQuote.quote}"`,
-//           fields: [
-//             {
-//               name: "Author:",
-//               value: `${randomQuote.author}`,
-//             },
-//           ],
-//           timestamp: new Date(),
-//           footer: {
-//             text: "Wocka-Flocka",
-//             icon_url: "hutps://i.imgur.com/AfFp7pu.png",
-//           },
-//         },
-//       ],
-//     })
-//     .then((msg) => {
-//       console.log(`Quote of the day sent to ${msg.channel.name}`);
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//     });
-// });
 
 // ======================================================== //
 // ======================================================== //
@@ -980,8 +950,7 @@ client.on("messageCreate", (message) => {
 
   // "inspirational quote" command
   if (msg === "inspirational quote" || msg === "quote") {
-    // quotes come from json file
-    const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+    // quotes come from json file & declared above the automated quote of the day function
     // if no author is listed, use "Unknown"
     if (
       randomQuote.quoteAuthor === undefined ||
