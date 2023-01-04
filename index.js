@@ -34,6 +34,7 @@ const WEATHER_API_KEY = process.env.OPEN_WEATHER_API_KEY;
 const IP_API_KEY = process.env.IP_GEOLOCATION_API_KEY;
 const IPIFY_API_KEY = process.env.IPIFY_API_KEY;
 const DISCORD_SERVER_ID = process.env.DISCORD_SERVER_ID;
+const DISCORD_SERVER_TEST_CHANNEL = process.env.DISCORD_SERVER_TEST_CHANNEL;
 const TOKEN = process.env.TOKEN;
 
 const client = new Client({
@@ -532,11 +533,85 @@ const resourceMessageEmbeded = {
 
 // call the !resources command to get a list of commands
 client.on("messageCreate", async (message) => {
-  // regex any non-alphanumeric character like spaces, commas, etc.
   const msg = message.content.toLowerCase();
 
   if (msg === "!resources" || msg === "!resource") {
     await message.reply({ embeds: [resourceMessageEmbeded] });
+  }
+});
+
+// ======================================================== //
+// Embeded Request User message
+// ======================================================== //
+
+const requestUserInfoMessageEmbeded = {
+  color: 0x0099ff,
+  title: "Wocka-Flocka Request User Info Commands",
+  url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+  author: {
+    name: "Wocka-Flocka",
+    icon_url:
+      "https://cdn.discordapp.com/avatars/1028153221040050216/71f4bd7e3c430b2ba5e5efed026fba3e.webp?size=240",
+    url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+  },
+  description: "List of commands for Requesting User Information",
+  thumbnail: {
+    url: "https://cdn.discordapp.com/avatars/1028153221040050216/71f4bd7e3c430b2ba5e5efed026fba3e.webp?size=240",
+  },
+  fields: [
+    {
+      name: "get my avatar",
+      value: "Wocka-Flocka will send your avatar",
+    },
+    {
+      name: "get my username",
+      value: "Wocka-Flocka will send your username",
+    },
+    {
+      name: "get my tag",
+      value: "Wocka-Flocka will send your tag",
+    },
+    {
+      name: "get my id",
+      value: "Wocka-Flocka will send your id",
+    },
+    {
+      name: "get my nickname",
+      value: "Wocka-Flocka will send your nickname",
+    },
+    {
+      name: "get my discriminator",
+      value: "Wocka-Flocka will send your discriminator",
+    },
+  ],
+  image: {
+    url: "https://cdn.discordapp.com/avatars/1028153221040050216/71f4bd7e3c430b2ba5e5efed026fba3e.webp?size=240",
+  },
+  timestamp: new Date().toISOString(),
+  footer: {
+    text: "Bot creator: Keith Hetrick",
+    icon_url:
+      "https://cdn.discordapp.com/avatars/1028153221040050216/71f4bd7e3c430b2ba5e5efed026fba3e.webp?size=240",
+  },
+};
+
+// call the !resources command to get a list of commands
+client.on("messageCreate", async (message) => {
+  const msg = message.content.toLowerCase();
+
+  if (
+    msg === "!request" ||
+    msg === "!request-user" ||
+    msg === "!request user" ||
+    msg === "!request-info" ||
+    msg === "!request info" ||
+    msg === "!userinfo" ||
+    msg === "!user-info" ||
+    msg === "!user info" ||
+    msg === "!user" ||
+    msg === "!info"
+  ) {
+    await message.reply({ embeds: [requestUserInfoMessageEmbeded] });
   }
 });
 
@@ -590,7 +665,7 @@ client.login(TOKEN);
 // AUTOMATED "QUOTE OF THE DAY" MESSAGE every 24 hours at 9 am using node-cron
 const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
 
-cron.schedule("*/30 * * * *", () => {
+cron.schedule("0 8 * * *", () => {
   const message = {
     reply: function (string) {
       client.channels.cache.get("1028135751508033679").send(string);
@@ -626,78 +701,47 @@ cron.schedule("*/30 * * * *", () => {
 });
 
 // Welcome message to new members to the server
-// create manually welcome command for below message
-// client.on("guildMemberAdd", (member) => {
-//   member.guild.channels.cache
-//     .get(DISCORD_SERVER_ID)
-//     .send(`Welcome to the server, ${member}`);
-// });
+client.on("guildMemberAdd", (member) => {
+  const channel = member.guild.channels.cache.find(
+    (ch) => ch.name === "welcome"
+  );
+  if (!channel) return;
 
-// add users name to the welcome message
-
-// const welcomeEmbed = {
-//   color: 3447003,
-//   title: "Welcome to the server!",
-//   description: "We're so glad you're here. 🚀",
-//   fields: [
-//     {
-//       name: "Please read the rules",
-//       value: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-//     },
-//     {
-//       name: "Please introduce yourself",
-//       value: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-//     },
-//   ],
-//   timestamp: new Date(),
-//   footer: {
-//     text: "Wocka-Flocka",
-//     icon_url: "https://cdn.discordapp.com/avatars/1028153221040050216/71f4bd7e3c430b2ba5e5efed026fba3e.webp?size=240",
-//   },
-// };
-
-// manualy call the above welcome message witha command
-// client.on("messageCreate", (message) => {
-//   if (msg === "!welcome") {
-//     message.reply({ embeds: [welcomeEmbed] });
-//   }
-// });
-
-// client.on("guildMemberAdd", (member) => {
-//   member.guild.channels.cache.get(DISCORD_SERVER_ID).send({
-//     embeds: [
-//       {
-//         title: `Welcome to the server, ${member}`,
-//         description: "We're so glad you're here. 🚀",
-//         fields: [
-//           {
-//             name: "Please read the rules",
-//             value: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-//           },
-//           {
-//             name: "Please introduce yourself",
-//             value: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-//           },
-//         ],
-//         timestamp: new Date(),
-//         footer: {
-//           text: "Wocka-Flocka",
-//           icon_url: "https://cdn.discordapp.com/avatars/1028153221040050216/71f4bd7e3c430b2ba5e5efed026fba3e.webp?size=240",
-//         },
-//       },
-//     ],
-//   });
-// });
+  channel.send({
+    embeds: [
+      {
+        title: `Welcome to the server, ${member.user.username}!`,
+        description: "We're so glad you're here. 🚀",
+        fields: [
+          {
+            name: "Please read the rules",
+            value: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+          },
+          {
+            name: "Please introduce yourself",
+            value: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+          },
+        ],
+        timestamp: new Date(),
+        footer: {
+          text: "Wocka-Flocka",
+          icon_url:
+            "https://cdn.discordapp.com/avatars/1028153221040050216/71f4bd7e3c430b2ba5e5efed026fba3e.webp?size=240",
+        },
+      },
+    ],
+  });
+});
 
 // show username in welcome message
 client.on("messageCreate", (message) => {
-  const msg = message.content.toLowerCase().replace(/[^a-z0-9\s]/gi, "");
+  const msg = message.content.toLowerCase();
 
   if (msg === "!welcome") {
     message.reply({
       embeds: [
         {
-          title: `Welcome to the server, ${message.author.username}`,
+          title: `Welcome to the server, ${message.author.username}!`,
           description: "We're so glad you're here. 🚀",
           fields: [
             {
@@ -721,16 +765,16 @@ client.on("messageCreate", (message) => {
   }
 
   // Send a message to a specific channel
-  if (msg === "Send a message to channel") {
-    client.channels.cache.get("1054444166664429639").send("Hello! 🚀");
+  if (msg === "send a message to channel") {
+    client.channels.cache.get(DISCORD_SERVER_TEST_CHANNEL).send("Hello! 🚀");
   }
   // Send a message to a DM channel
-  if (msg === "Send message to DM") {
+  if (msg === "send message to dm") {
     message.author.send("Hello! 🚀");
   }
 
   // Get list of members in the server
-  if (msg === "Get list of current members") {
+  if (msg === "get current members") {
     // fetch all current members in the server
     const list = client.guilds.cache.get(DISCORD_SERVER_ID);
 
@@ -1273,17 +1317,37 @@ client.on("messageCreate", (message) => {
       }
     }
 
-    if (event === "christmas" || event === "xmas") {
+    // set all events to an hash map to check if event is valid
+    const eventCheckMap = {};
+
+    // MAIN EVENT CHECKER/SETTER
+    if (
+      event === "christmas" ||
+      event === "xmas" ||
+      event === "x-mas" ||
+      event === "christmas day"
+    ) {
       eventDate.setMonth(11);
       eventDate.setDate(25);
+      // add event names & eventDate to eventCheckMap
+      eventCheckMap["christmas"] = eventDate;
+      eventCheckMap["xmas"] = eventDate;
+      eventCheckMap["x-mas"] = eventDate;
+      eventCheckMap["christmas day"] = eventDate;
     }
-    if (event === "new years eve" || event === "nye") {
+    if (event === "new years eve" || event === "nye" || event === "new years") {
       eventDate.setMonth(11);
       eventDate.setDate(31);
+      eventCheckMap["new years eve"] = eventDate;
+      eventCheckMap["new years"] = eventDate;
+      eventCheckMap["nye"] = eventDate;
     }
     if (event === "my birthday" || event === "my bday" || event === "bday") {
       eventDate.setMonth(2);
       eventDate.setDate(8);
+      eventCheckMap["my birthday"] = eventDate;
+      eventCheckMap["my bday"] = eventDate;
+      eventCheckMap["bday"] = eventDate;
     }
     if (
       event === "halloween" ||
@@ -1292,16 +1356,28 @@ client.on("messageCreate", (message) => {
     ) {
       eventDate.setMonth(9);
       eventDate.setDate(31);
+      eventCheckMap["halloween"] = eventDate;
+      eventCheckMap["halloween day"] = eventDate;
+      eventCheckMap["spooky"] = eventDate;
     }
     if (
       event === "valentines day" ||
       event === "valentines" ||
       event === "valentine" ||
       event === "love day" ||
-      event === "singles awareness day"
+      event === "singles awareness day (aka valentines Day)" ||
+      event === "singles awareness day" ||
+      event === "singles awareness"
     ) {
       eventDate.setMonth(1);
       eventDate.setDate(14);
+      eventCheckMap["valentines day"] = eventDate;
+      eventCheckMap["valentines"] = eventDate;
+      eventCheckMap["valentine"] = eventDate;
+      eventCheckMap["love day"] = eventDate;
+      eventCheckMap["singles awareness day (aka valentines Day)"] = eventDate;
+      eventCheckMap["singles awareness day"] = eventDate;
+      eventCheckMap["singles awareness"] = eventDate;
     }
     if (
       event === "thanksgiving" ||
@@ -1313,6 +1389,12 @@ client.on("messageCreate", (message) => {
     ) {
       eventDate.setMonth(10);
       eventDate.setDate(23);
+      eventCheckMap["thanksgiving"] = eventDate;
+      eventCheckMap["turkey day"] = eventDate;
+      eventCheckMap["turkey"] = eventDate;
+      eventCheckMap["thanksgiving day"] = eventDate;
+      eventCheckMap["gobble gobble"] = eventDate;
+      eventCheckMap["gobble"] = eventDate;
     }
     if (
       event === "easter" ||
@@ -1322,6 +1404,10 @@ client.on("messageCreate", (message) => {
     ) {
       eventDate.setMonth(3);
       eventDate.setDate(9);
+      eventCheckMap["easter"] = eventDate;
+      eventCheckMap["easter day"] = eventDate;
+      eventCheckMap["easter egg"] = eventDate;
+      eventCheckMap["easter sunday"] = eventDate;
     }
     if (
       event === "4th of july" ||
@@ -1333,34 +1419,54 @@ client.on("messageCreate", (message) => {
     ) {
       eventDate.setMonth(6);
       eventDate.setDate(4);
+      eventCheckMap["4th of july"] = eventDate;
+      eventCheckMap["july 4th"] = eventDate;
+      eventCheckMap["july 4"] = eventDate;
+      eventCheckMap["4 of july"] = eventDate;
+      eventCheckMap["independence day"] = eventDate;
+      eventCheckMap["independence"] = eventDate;
     }
     if (event === "memorial day" || event === "memorial") {
       eventDate.setMonth(4);
       eventDate.setDate(29);
+      eventCheckMap["memorial day"] = eventDate;
+      eventCheckMap["memorial"] = eventDate;
     }
     if (event === "labor day" || event === "labor") {
       eventDate.setMonth(8);
       eventDate.setDate(4);
+      eventCheckMap["labor day"] = eventDate;
+      eventCheckMap["labor"] = eventDate;
     }
     if (event === "mothers day" || event === "mothers") {
       eventDate.setMonth(4);
       eventDate.setDate(14);
+      eventCheckMap["mothers day"] = eventDate;
+      eventCheckMap["mothers"] = eventDate;
     }
     if (event === "fathers day" || event === "fathers") {
       eventDate.setMonth(5);
       eventDate.setDate(18);
+      eventCheckMap["fathers day"] = eventDate;
+      eventCheckMap["fathers"] = eventDate;
     }
     if (event === "columbus day" || event === "columbus") {
       eventDate.setMonth(9);
       eventDate.setDate(12);
+      eventCheckMap["columbus day"] = eventDate;
+      eventCheckMap["columbus"] = eventDate;
     }
     if (event === "groundhog day" || event === "groundhog") {
       eventDate.setMonth(1);
       eventDate.setDate(2);
+      eventCheckMap["groundhog day"] = eventDate;
+      eventCheckMap["groundhog"] = eventDate;
     }
     if (event === "st patricks day" || event === "st patricks") {
       eventDate.setMonth(2);
       eventDate.setDate(17);
+      eventCheckMap["st patricks day"] = eventDate;
+      eventCheckMap["st patricks"] = eventDate;
     }
     if (
       event === "cinco de mayo" ||
@@ -1372,6 +1478,12 @@ client.on("messageCreate", (message) => {
     ) {
       eventDate.setMonth(4);
       eventDate.setDate(5);
+      eventCheckMap["cinco de mayo"] = eventDate;
+      eventCheckMap["cinco"] = eventDate;
+      eventCheckMap["may 5th"] = eventDate;
+      eventCheckMap["may 5"] = eventDate;
+      eventCheckMap["cinco de mayo day"] = eventDate;
+      eventCheckMap["mayo de cinco"] = eventDate;
     }
     if (
       event === "mexican independence day" ||
@@ -1379,6 +1491,8 @@ client.on("messageCreate", (message) => {
     ) {
       eventDate.setMonth(8);
       eventDate.setDate(16);
+      eventCheckMap["mexican independence day"] = eventDate;
+      eventCheckMap["mexican independence"] = eventDate;
     }
     if (
       event === "dia de los muertos" ||
@@ -1388,20 +1502,30 @@ client.on("messageCreate", (message) => {
     ) {
       eventDate.setMonth(10);
       eventDate.setDate(1);
+      eventCheckMap["dia de los muertos"] = eventDate;
+      eventCheckMap["dia de los muertos day"] = eventDate;
+      eventCheckMap["day of the dead"] = eventDate;
+      eventCheckMap["day of the dead day"] = eventDate;
     }
     if (event === "good friday" || event === "good") {
       eventDate.setMonth(3);
       eventDate.setDate(7);
+      eventCheckMap["good friday"] = eventDate;
+      eventCheckMap["good"] = eventDate;
     }
     if (event === "black friday") {
       eventDate.setMonth(10);
       eventDate.setDate(24);
+      eventCheckMap["black friday"] = eventDate;
     }
     if (event === "cyber monday") {
       eventDate.setMonth(10);
       eventDate.setDate(27);
+      eventCheckMap["cyber monday"] = eventDate;
     }
     if (
+      event === "martin luther king jr day" ||
+      event === "martin luther king jr" ||
       event === "martin luther king day" ||
       event === "martin luther king" ||
       event === "mlk day" ||
@@ -1409,43 +1533,65 @@ client.on("messageCreate", (message) => {
     ) {
       eventDate.setMonth(0);
       eventDate.setDate(16);
+      eventCheckMap["martin luther king jr day"] = eventDate;
+      eventCheckMap["martin luther king jr"] = eventDate;
+      eventCheckMap["martin luther king day"] = eventDate;
+      eventCheckMap["martin luther king"] = eventDate;
+      eventCheckMap["mlk day"] = eventDate;
+      eventCheckMap["mlk"] = eventDate;
     }
     if (event === "presidents day" || event === "presidents") {
       eventDate.setMonth(1);
       eventDate.setDate(20);
+      eventCheckMap["presidents day"] = eventDate;
+      eventCheckMap["presidents"] = eventDate;
     }
     if (event === "juneteenth") {
       eventDate.setMonth(5);
       eventDate.setDate(19);
+      eventCheckMap["juneteenth"] = eventDate;
     }
     if (event === "hannukah" || event === "hanukkah") {
       eventDate.setMonth(11);
       eventDate.setDate(10);
+      eventCheckMap["hannukah"] = eventDate;
     }
     if (event === "yom kippur") {
       eventDate.setMonth(9);
       eventDate.setDate(18);
+      eventCheckMap["yom kippur"] = eventDate;
     }
     if (event === "rosh hashanah") {
       eventDate.setMonth(8);
       eventDate.setDate(7);
+      eventCheckMap["rosh hashanah"] = eventDate;
     }
     if (event === "passover") {
       eventDate.setMonth(3);
       eventDate.setDate(8);
+      eventCheckMap["passover"] = eventDate;
     }
     if (event === "earth day" || event === "earth") {
       eventDate.setMonth(3);
       eventDate.setDate(22);
+      eventCheckMap["earth day"] = eventDate;
+      eventCheckMap["earth"] = eventDate;
     }
     if (event === "mardi gras" || event === "mardi" || event === "carnival") {
       eventDate.setMonth(1);
       eventDate.setDate(21);
+      eventCheckMap["mardi gras"] = eventDate;
+      eventCheckMap["mardi"] = eventDate;
+      eventCheckMap["carnival"] = eventDate;
     }
     if (event === "tax day" || event === "tax") {
       eventDate.setMonth(3);
       eventDate.setDate(18);
+      eventCheckMap["tax day"] = eventDate;
+      eventCheckMap["tax"] = eventDate;
     }
+
+    console.log("eventCheckMap: ", eventCheckMap);
 
     // ======================================================== //
     // Days Until Event Countdown
@@ -1485,35 +1631,29 @@ client.on("messageCreate", (message) => {
     */
     // ======================================================== //
 
-    // first letter of event response in chat is capitalized
-    event = event.charAt(0).toUpperCase() + event.slice(1);
+    // style function that changes errorMessage to red
+    const style = (errorMessage) => {
+      return `\`\`\`diff\n- ${errorMessage}\n\`\`\``;
+    };
 
-    // throw error if no input event
-    if (!event || event === " " || event === undefined) {
-      // style function that changes errorMessage to red
-      const style = (errorMessage) => `\`\`\`diff\n- ${errorMessage}\`\`\``;
+    // ERROR HANDLING - if event is not in eventCheckMap, throw error
+    if (!Object.keys(eventCheckMap).includes(event.toLowerCase())) {
       message.channel.send(
         style(
-          `Please enter a valid holiday or event!\n Use the command "!holidays" to view a list of trackable holidays.`
-        )
-      );
-    }
-
-    // if event is mispelled, throw error
-    else if (
-      (eventDate.getFullYear() === today.getFullYear() &&
-        eventDate.getMonth() === today.getMonth() &&
-        eventDate.getDate() === today.getDate()) ||
-      event === null
-    ) {
-      const style = (errorMessage) => `\`\`\`diff\n- ${errorMessage}\`\`\``;
-      message.channel.send(
-        style(
-          `Please enter a valid holiday or event!\n Use the command "!holidays" to view a list of trackable holidays.`
+          `Please enter a valid holiday or event!\n\n Use the command "!holidays" to view a list of trackable holidays.`
         )
       );
     } else {
-      // send message with event date and days count
+      // return the longest Object key in eventCheckMap
+      event = Object.keys(eventCheckMap).sort((a, b) => b.length - a.length)[0];
+
+      // first letter of each word in event response in chat is capitalized
+      event = event
+        .split(" ")
+        .map((word) => word.charAt(0).toUpperCase() + word.substring(1))
+        .join(" ");
+
+      // RESPONSE
       console.log(
         "RESPONSE: ",
         `The next ${event} is on ${eventDate.toLocaleDateString("en-US", {
@@ -1523,7 +1663,6 @@ client.on("messageCreate", (message) => {
           day: "numeric",
         })}, which is ${daysUntilEvent} days away!`
       );
-
       message.channel.send(
         `The next **${event}** is on _${eventDate.toLocaleDateString("en-US", {
           weekday: "long",
