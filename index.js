@@ -590,7 +590,7 @@ client.login(TOKEN);
 // AUTOMATED "QUOTE OF THE DAY" MESSAGE every 24 hours at 9 am using node-cron
 const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
 
-cron.schedule("0 8 * * *", () => {
+cron.schedule("*/30 * * * *", () => {
   const message = {
     reply: function (string) {
       client.channels.cache.get("1028135751508033679").send(string);
