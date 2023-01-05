@@ -23,6 +23,7 @@
     "node-cron": "^3.0.2",
     "node-schedule": "^2.1.0",
     "nodemon": "^2.0.20",
+    "openai": "^3.1.0",
     "weather-js": "^2.0.0"
   }
 }

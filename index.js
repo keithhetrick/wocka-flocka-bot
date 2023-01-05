@@ -7,9 +7,10 @@
  ╚══╝╚══╝  ╚═════╝  ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝      ╚═╝     ╚══════╝ ╚═════╝  ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝    ╚═════╝  ╚═════╝    ╚═╝   
 */
 
+require("dotenv").config();
+
 const cleverbot = require("cleverbot-free");
 const { Client, GatewayIntentBits } = require("discord.js");
-require("dotenv").config();
 const axios = require("axios");
 const cron = require("node-cron");
 
@@ -33,9 +34,12 @@ const calendarYear = require("./jsonFiles/calendarYear.json");
 const WEATHER_API_KEY = process.env.OPEN_WEATHER_API_KEY;
 const IP_API_KEY = process.env.IP_GEOLOCATION_API_KEY;
 const IPIFY_API_KEY = process.env.IPIFY_API_KEY;
-const DISCORD_SERVER_ID = process.env.DISCORD_SERVER_ID;
+const DISCORD_SERVER_GENERAL_CHANNEL_ID =
+  process.env.DISCORD_SERVER_GENERAL_CHANNEL_ID;
+const DISCORD_SERVER_MAIN_ID = process.env.DISCORD_SERVER_MAIN_ID;
 const DISCORD_SERVER_TEST_CHANNEL = process.env.DISCORD_SERVER_TEST_CHANNEL;
 const TOKEN = process.env.TOKEN;
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
 const client = new Client({
   intents: [
@@ -43,6 +47,14 @@ const client = new Client({
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent,
   ],
+});
+
+// ======================================================== //
+// ======================================================== //
+// LOGIN CHECK
+
+client.on("ready", () => {
+  console.log(`Logged in as ${client.user.tag} 🚀🤖!`);
 });
 
 client.on("ready", () => {
@@ -139,8 +151,6 @@ const helpMessageEmbeded = {
       "https://cdn.discordapp.com/avatars/1028153221040050216/71f4bd7e3c430b2ba5e5efed026fba3e.webp?size=240",
   },
 };
-const channel = client.channels.cache.get(DISCORD_SERVER_ID);
-// channel.send({ embeds: [helpMessageEmbed] });
 
 // call the !help command to get a list of commands
 client.on("messageCreate", async (message) => {
@@ -628,22 +638,61 @@ client.on("messageCreate", async (message) => {
 // ======================================================== //
 // ======================================================== //
 
-let conversation = [];
+// let conversation = [];
 
-client.on("messageCreate", (message) => {
-  const msg = message.content.toLowerCase().replace(/[^a-z0-9\s]/gi, "");
+// CLEVERBOT AI
+// client.on("messageCreate", (message) => {
+//   const msg = message.content.toLowerCase().replace(/[^a-z0-9\s]/gi, "");
 
-  if (message.author.bot) return false;
-  if (message.mentions.has(client.user.id)) {
-    let text = msg;
-    text = text.substring(text.indexOf(">") + 2, text.length);
-    console.log(text);
+//   if (message.author.bot) return false;
+//   if (message.mentions.has(client.user.id)) {
+//     let text = msg;
+//     text = text.substring(text.indexOf(">") + 2, text.length);
+//     console.log(text);
 
-    cleverbot(text, conversation).then((res) => {
-      conversation.push(text);
-      conversation.push(res);
-      message.channel.send(res);
+//     cleverbot(text, conversation).then((res) => {
+//       conversation.push(text);
+//       conversation.push(res);
+//       message.channel.send(res);
+//     });
+//   }
+// });
+
+// OpenAI API
+const { Configuration, OpenAIApi } = require("openai");
+const configuration = new Configuration({
+  apiKey: OPENAI_API_KEY,
+});
+
+const openai = new OpenAIApi(configuration);
+
+client.on("messageCreate", async (message) => {
+  try {
+    // check so that the bot doesn't reply to itself
+    if (message.author.bot) return;
+
+    // check that the message is in the channel that the bot is allowed to respond in
+    // if (message.channel.id !== channelID) return;
+
+    // check that the message starts with the prefix @ChatGPT
+    if (!message.content.startsWith("@ChatGPT")) return;
+
+    // remove the prefix @ChatGPT from the message
+    const messageContent = message.content.slice(8);
+
+    const gptResponse = await openai.createCompletion({
+      model: "text-davinci-003",
+      prompt: `ChatGPT is a friendly chatbot. \n\`ChatGPT: Hello, how are you?\n\ ${message.author.username}: ${messageContent}\n\`ChatGPT:`,
+      // prompt: `ChatGTP: ${message.content}`,
+      temperature: 0.9,
+      max_tokens: 100,
+      stop: ["ChatGTP:", "Keith Hetrick:"],
     });
+
+    message.reply(`${gptResponse.data.choices[0].text}`);
+    return;
+  } catch (error) {
+    console.log(error);
   }
 });
 
@@ -663,14 +712,8 @@ client.login(TOKEN);
 // ======================================================== //
 
 // AUTOMATED "QUOTE OF THE DAY" MESSAGE every 24 hours at 9 am using node-cron
-const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-
-cron.schedule("0 8 * * *", () => {
-  const message = {
-    reply: function (string) {
-      client.channels.cache.get("1028135751508033679").send(string);
-    },
-  };
+async function quoteOfTheDay() {
+  const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
   if (
     randomQuote.quoteAuthor === undefined ||
     randomQuote.quoteAuthor === "" ||
@@ -683,22 +726,36 @@ cron.schedule("0 8 * * *", () => {
   console.log(
     `Quote of the day:\r\n\n "${randomQuote.quoteText}"\r\n - ${randomQuote.quoteAuthor}.\r\n\n Have a great day!\r\n\n\r\n\n- Sent by Wocka-Flocka using node-cron`
   );
+
   // make reply a embeded message
-  message.reply({
-    embeds: [
-      {
-        title: "Quote of the day:",
-        description: `"${randomQuote.quoteText}"\r\n - ${randomQuote.quoteAuthor}.\r\n\n *Have a great day!*`,
-        timestamp: new Date(),
-        footer: {
-          text: "Wocka-Flocka",
-          icon_url:
-            "https://cdn.discordapp.com/avatars/1028153221040050216/71f4bd7e3c430b2ba5e5efed026fba3e.webp?size=240",
-        },
-      },
-    ],
+  const quoteMessageEmbeded = {
+    title: "Quote of the day:",
+    description: `"${randomQuote.quoteText}"\r\n - ${randomQuote.quoteAuthor}.\r\n\n *Have a great day!*`,
+    timestamp: new Date().toISOString(),
+    footer: {
+      text: "Wocka-Flocka",
+      icon_url:
+        "https://cdn.discordapp.com/avatars/1028153221040050216/71f4bd7e3c430b2ba5e5efed026fba3e.webp?size=240",
+    },
+  };
+
+  // send the message to the channel
+  client.channels.cache.get(DISCORD_SERVER_GENERAL_CHANNEL_ID).send({
+    embeds: [quoteMessageEmbeded],
   });
-});
+}
+
+// set timezone to central time
+cron.schedule(
+  "*/30 * * * *",
+  async () => {
+    await quoteOfTheDay();
+  },
+  {
+    scheduled: true,
+    timezone: "America/Chicago",
+  }
+);
 
 // Welcome message to new members to the server
 client.on("guildMemberAdd", (member) => {
@@ -764,27 +821,146 @@ client.on("messageCreate", (message) => {
     });
   }
 
-  // Send a message to a specific channel
-  if (msg === "send a message to channel") {
-    client.channels.cache.get(DISCORD_SERVER_TEST_CHANNEL).send("Hello! 🚀");
+  // ======================================================== //
+  // ======================================================== //
+  /*
+███╗   ███╗███████╗███████╗███████╗███████╗███╗   ██╗ ██████╗ ██╗███╗   ██╗ ██████╗      █████╗ ██╗      ██████╗  ██████╗ 
+████╗ ████║██╔════╝██╔════╝██╔════╝██╔════╝████╗  ██║██╔════╝ ██║████╗  ██║██╔════╝     ██╔══██╗██║     ██╔════╝ ██╔═══██╗
+██╔████╔██║█████╗  ███████╗███████╗█████╗  ██╔██╗ ██║██║  ███╗██║██╔██╗ ██║██║  ███╗    ███████║██║     ██║  ███╗██║   ██║
+██║╚██╔╝██║██╔══╝  ╚════██║╚════██║██╔══╝  ██║╚██╗██║██║   ██║██║██║╚██╗██║██║   ██║    ██╔══██║██║     ██║   ██║██║   ██║
+██║ ╚═╝ ██║███████╗███████║███████║███████╗██║ ╚████║╚██████╔╝██║██║ ╚████║╚██████╔╝    ██║  ██║███████╗╚██████╔╝╚██████╔╝
+╚═╝     ╚═╝╚══════╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═══╝ ╚═════╝ ╚═╝╚═╝  ╚═══╝ ╚═════╝     ╚═╝  ╚═╝╚══════╝ ╚═════╝  ╚═════╝ 
+*/
+  // ======================================================== //
+  // ======================================================== //
+
+  if (
+    msg.startsWith("send message to") ||
+    msg.startsWith("send a message to")
+  ) {
+    const channelName =
+      msg.split("send message to ")[1] || msg.split("send a message to ")[1];
+    const channel = client.channels.cache.find((ch) => ch.name === channelName);
+
+    if (!channel) {
+      // sort avaliable channels in server by name
+      const channels = client.channels.cache
+        .map((ch) => ch.name)
+        .sort((a, b) => a.localeCompare(b));
+
+      message.reply({
+        embeds: [
+          {
+            title: `Send a message to *${channelName}* channel`,
+            description:
+              "I can't find that channel. Please make sure you typed the channel name correctly. Here are the channels I can find: \r\n\n" +
+              channels.join(", "),
+            timestamp: new Date().toISOString(),
+            footer: {
+              text: "Wocka-Flocka",
+              icon_url:
+                "https://cdn.discordapp.com/avatars/1028153221040050216/71f4bd7e3c430b2ba5e5efed026fba3e.webp?size=240",
+            },
+          },
+        ],
+      });
+    } else {
+      // send embeded message as reply
+      message.reply({
+        embeds: [
+          {
+            title: `Send a message to *${channelName}* channel`,
+            description:
+              "What message do you want to send to the channel? (type 'cancel' to cancel)",
+            timestamp: new Date().toISOString(),
+            footer: {
+              text: "Wocka-Flocka",
+              icon_url:
+                "https://cdn.discordapp.com/avatars/1028153221040050216/71f4bd7e3c430b2ba5e5efed026fba3e.webp?size=240",
+            },
+          },
+        ],
+      });
+
+      // wait for user to reply with message
+      const filter = (m) => m.author.id === message.author.id;
+
+      message.channel
+        .awaitMessages({ filter, max: 1, time: 30000, errors: ["time"] })
+        .then((collected) => {
+          if (collected.first().content.toLowerCase() === "cancel") {
+            return message.reply("Canceled");
+          } else {
+            channel.send({
+              embeds: [
+                {
+                  title: `Message: ${collected.first().content}`,
+                  description: `Message from *${message.author.username}*`,
+                  timestamp: new Date().toISOString(),
+                  footer: {
+                    text: "Wocka-Flocka",
+                    icon_url:
+                      "https://cdn.discordapp.com/avatars/1028153221040050216/71f4bd7e3c430b2ba5e5efed026fba3e.webp?size=240",
+                  },
+                },
+              ],
+            });
+            message.author.send({
+              embeds: [
+                {
+                  title: `Message sent to *${channelName}* channel`,
+                  description: `Message sent: ${collected.first().content}`,
+                  timestamp: new Date().toISOString(),
+                  footer: {
+                    text: "Wocka-Flocka",
+                    icon_url:
+                      "https://cdn.discordapp.com/avatars/1028153221040050216/71f4bd7e3c430b2ba5e5efed026fba3e.webp?size=240",
+                  },
+                },
+              ],
+            });
+          }
+        })
+        .catch(() => {
+          message.reply("No message after 30 seconds, operation canceled.");
+        });
+    }
   }
+
   // Send a message to a DM channel
   if (msg === "send message to dm") {
     message.author.send("Hello! 🚀");
   }
 
   // Get list of members in the server
-  if (msg === "get current members") {
+  if (
+    msg === "get current members" ||
+    msg === "get members" ||
+    msg === "total members"
+  ) {
     // fetch all current members in the server
-    const list = client.guilds.cache.get(DISCORD_SERVER_ID);
+    const list = client.guilds.cache.get(DISCORD_SERVER_MAIN_ID);
 
+    // loop through the list of members and send a message to each member
     list.members.cache.forEach((member) => {
       console.log(member.user.username);
     });
 
-    // total number of members in the server
+    // send embeded message to author along wth server name
     const members = list.members.cache;
-    message.author.send(`Total members: ${members.size}`);
+    message.author.send({
+      embeds: [
+        {
+          title: `Total members of *${list.name}:* \n${members.size}`,
+          timestamp: new Date(),
+          footer: {
+            text: "Wocka-Flocka",
+            icon_url:
+              "https://cdn.discordapp.com/avatars/1028153221040050216/71f4bd7e3c430b2ba5e5efed026fba3e.webp?size=240",
+          },
+        },
+      ],
+    });
     console.log(`Total members: ${members.size}`);
   }
 });
