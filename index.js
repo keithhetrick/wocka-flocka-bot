@@ -125,6 +125,16 @@ const helpMessageEmbeded = {
     },
     {
       name: "\u200b",
+      value: "**CHATGPT INTEGRATION** - fully operational OpenAI Q&A chatbot",
+      inline: false,
+    },
+    {
+      name: "\u200b",
+      value: "**CLEVERBOT** - fully responsive & interactive AI chatbot",
+      inline: false,
+    },
+    {
+      name: "\u200b",
       value: "**HOLIDAY TRACKER** - list of holidays",
       inline: false,
     },
@@ -638,25 +648,25 @@ client.on("messageCreate", async (message) => {
 // ======================================================== //
 // ======================================================== //
 
-// let conversation = [];
+let conversation = [];
 
 // CLEVERBOT AI
-// client.on("messageCreate", (message) => {
-//   const msg = message.content.toLowerCase().replace(/[^a-z0-9\s]/gi, "");
+client.on("messageCreate", (message) => {
+  const msg = message.content.toLowerCase().replace(/[^a-z0-9\s]/gi, "");
 
-//   if (message.author.bot) return false;
-//   if (message.mentions.has(client.user.id)) {
-//     let text = msg;
-//     text = text.substring(text.indexOf(">") + 2, text.length);
-//     console.log(text);
+  if (message.author.bot) return false;
+  if (message.mentions.has(client.user.id)) {
+    let text = msg;
+    text = text.substring(text.indexOf(">") + 2, text.length);
+    console.log(text);
 
-//     cleverbot(text, conversation).then((res) => {
-//       conversation.push(text);
-//       conversation.push(res);
-//       message.channel.send(res);
-//     });
-//   }
-// });
+    cleverbot(text, conversation).then((res) => {
+      conversation.push(text);
+      conversation.push(res);
+      message.channel.send(res);
+    });
+  }
+});
 
 // OpenAI API
 const { Configuration, OpenAIApi } = require("openai");
@@ -667,6 +677,8 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 client.on("messageCreate", async (message) => {
+  // make message lowercase
+  const msg = message.content;
   try {
     // check so that the bot doesn't reply to itself
     if (message.author.bot) return;
@@ -674,16 +686,28 @@ client.on("messageCreate", async (message) => {
     // check that the message is in the channel that the bot is allowed to respond in
     // if (message.channel.id !== channelID) return;
 
-    // check that the message starts with the prefix @ChatGPT
-    if (!message.content.startsWith("@ChatGPT")) return;
+    // check that the message starts with the prefix @ChatGPT, push all possible prefixes into an array for checking
+    const prefixes = [
+      "@chatgpt",
+      "@chat",
+      "@gpt",
+      "@gpt-3",
+      "@gpt3",
+      "@chatgpt3",
+      "@ai",
+      "@openai",
+      "@openai-gpt",
+      "@openai-gpt-3",
+      "@openai-gpt3",
+    ];
+    if (!prefixes.some((prefix) => msg.startsWith(prefix))) return;
 
-    // remove the prefix @ChatGPT from the message
-    const messageContent = message.content.slice(8);
+    // remove the prefix  from the message
+    const messageContent = msg.replace(prefixes, "");
 
     const gptResponse = await openai.createCompletion({
       model: "text-davinci-003",
       prompt: `ChatGPT is a friendly chatbot. \n\`ChatGPT: Hello, how are you?\n\ ${message.author.username}: ${messageContent}\n\`ChatGPT:`,
-      // prompt: `ChatGTP: ${message.content}`,
       temperature: 0.9,
       max_tokens: 100,
       stop: ["ChatGTP:", "Keith Hetrick:"],
