@@ -13,6 +13,7 @@ const cleverbot = require("cleverbot-free");
 const { Client, GatewayIntentBits } = require("discord.js");
 const axios = require("axios");
 const cron = require("node-cron");
+const cheerio = require("cheerio");
 
 // JSON files
 const jokes = require("./jsonFiles/jokes.json");
@@ -55,9 +56,6 @@ const client = new Client({
 
 client.on("ready", () => {
   console.log(`Logged in as ${client.user.tag} 🚀🤖!`);
-});
-
-client.on("ready", () => {
   console.log("Wocka-Flocka is ready to rock-a rock-a!!!!");
 });
 
@@ -125,12 +123,14 @@ const helpMessageEmbeded = {
     },
     {
       name: "\u200b",
-      value: "**CHATGPT INTEGRATION** - fully operational OpenAI Q&A chatbot",
+      value:
+        "**CHATGPT INTEGRATION** - fully operational OpenAI chatbot\n\n_Type '@chat' to talk with ChatGPT_",
       inline: false,
     },
     {
       name: "\u200b",
-      value: "**CLEVERBOT** - fully responsive & interactive AI chatbot",
+      value:
+        "**CLEVERBOT** - fully responsive & interactive AI chatbot\n\n_Type '@Wocka-Flocka-Bot' to talk with Cleverbot_",
       inline: false,
     },
     {
@@ -161,15 +161,6 @@ const helpMessageEmbeded = {
       "https://cdn.discordapp.com/avatars/1028153221040050216/71f4bd7e3c430b2ba5e5efed026fba3e.webp?size=240",
   },
 };
-
-// call the !help command to get a list of commands
-client.on("messageCreate", async (message) => {
-  const msg = message.content.toLowerCase();
-
-  if (msg === "!help") {
-    await message.reply({ embeds: [helpMessageEmbeded] });
-  }
-});
 
 // ======================================================== //
 // Embeded Game message
@@ -306,15 +297,6 @@ const gameMessageEmbeded = {
       "https://cdn.discordapp.com/avatars/1028153221040050216/71f4bd7e3c430b2ba5e5efed026fba3e.webp?size=240",
   },
 };
-
-// call the !help command to get a list of commands
-client.on("messageCreate", async (message) => {
-  const msg = message.content.toLowerCase();
-
-  if (msg === "!games") {
-    await message.reply({ embeds: [gameMessageEmbeded] });
-  }
-});
 
 // ======================================================== //
 // Embeded Holiday message
@@ -479,15 +461,6 @@ const holidayMessageEmbeded = {
   },
 };
 
-// call the !holiday command to get a list of commands
-client.on("messageCreate", async (message) => {
-  const msg = message.content.toLowerCase();
-
-  if (msg === "!holiday" || msg === "!holidays") {
-    await message.reply({ embeds: [holidayMessageEmbeded] });
-  }
-});
-
 // ======================================================== //
 // Embeded Resource message
 // ======================================================== //
@@ -550,15 +523,6 @@ const resourceMessageEmbeded = {
       "https://cdn.discordapp.com/avatars/1028153221040050216/71f4bd7e3c430b2ba5e5efed026fba3e.webp?size=240",
   },
 };
-
-// call the !resources command to get a list of commands
-client.on("messageCreate", async (message) => {
-  const msg = message.content.toLowerCase();
-
-  if (msg === "!resources" || msg === "!resource") {
-    await message.reply({ embeds: [resourceMessageEmbeded] });
-  }
-});
 
 // ======================================================== //
 // Embeded Request User message
@@ -632,6 +596,26 @@ client.on("messageCreate", async (message) => {
     msg === "!info"
   ) {
     await message.reply({ embeds: [requestUserInfoMessageEmbeded] });
+  }
+
+  // call the !resources command to get a list of commands
+  if (msg === "!resources" || msg === "!resource") {
+    await message.reply({ embeds: [resourceMessageEmbeded] });
+  }
+
+  // call the !holiday command to get a list of commands
+  if (msg === "!holiday" || msg === "!holidays") {
+    await message.reply({ embeds: [holidayMessageEmbeded] });
+  }
+
+  // call the !help command to get a list of commands
+  if (msg === "!games") {
+    await message.reply({ embeds: [gameMessageEmbeded] });
+  }
+
+  // call the !help command to get a list of commands
+  if (msg === "!help") {
+    await message.reply({ embeds: [helpMessageEmbeded] });
   }
 });
 
@@ -763,15 +747,14 @@ async function quoteOfTheDay() {
     },
   };
 
-  // send the message to the channel
   client.channels.cache.get(DISCORD_SERVER_GENERAL_CHANNEL_ID).send({
     embeds: [quoteMessageEmbeded],
   });
 }
 
-// set timezone to central time
+// CRON JOB
 cron.schedule(
-  "*/30 * * * *",
+  "0 9 * * *",
   async () => {
     await quoteOfTheDay();
   },
@@ -1110,87 +1093,106 @@ client.on("messageCreate", (message) => {
   };
 
   if (msg === "pick a card") {
-    // generate a random number between 1 and 52
-    const randomCard = Math.floor(Math.random() * 52) + 1;
-    // generate a random suit
     const randomSuit = Math.floor(Math.random() * 4) + 1;
-    // generate a random card value
-    const randomCardValue = Math.floor(Math.random() * 13) + 1;
+    const randomCard = Math.floor(Math.random() * 13) + 1;
 
-    // use randomCard & randomSuit & randomCardValue to generate a random card
-
-    // if the random card value is 1, it's an Ace
-    if (randomCardValue === 1) {
-      message.reply(`Your random card is the Ace of ${suits[randomSuit]}`);
-    }
-    // if the random card value is 11, it's a Jack
-    else if (randomCardValue === 11) {
-      message.reply(`Your random card is the Jack of ${suits[randomSuit]}`);
-    }
-    // if the random card value is 12, it's a Queen
-    else if (randomCardValue === 12) {
-      message.reply(`Your random card is the Queen of ${suits[randomSuit]}`);
-    }
-    // if the random card value is 13, it's a King
-    else if (randomCardValue === 13) {
-      message.reply(`Your random card is the King of ${suits[randomSuit]}`);
-    }
-    // if the random card value is anything else, it's a numbered card
-    else {
+    if (randomCard === 1) {
+      message.reply(`Huzzah! Your card is the Ace of ${suits[randomSuit]}`);
+    } else if (randomCard === 11) {
       message.reply(
-        `Your random card is the ${randomCardValue} of ${suits[randomSuit]}`
+        `Hit the roaod Jack! You picked the Jack of ${suits[randomSuit]}`
       );
+    } else if (randomCard === 12) {
+      message.reply(
+        `Hey Majesty! Your card is the Queen of ${suits[randomSuit]}`
+      );
+    } else if (randomCard === 13) {
+      message.reply(
+        `Your highness picked the King of ${suits[randomSuit]}. Long live the King!`
+      );
+    } else {
+      message.reply(`Your card is the ${randomCard} of ${suits[randomSuit]}`);
     }
   }
 
-  // "guess a number" game
-  if (msg === "guess a number" || msg === "guess the number") {
-    // // generate a random number between 1 and 100
-    // const randomNumber = Math.floor(Math.random() * 100) + 1;
-    // // ask user to guess the number
-    // message.reply(
-    //   `Guess a number between 1 and 100. You have 5 guesses. Type "guess" followed by your guess. Example: guess 50`
-    // );
-    // // create a collector for the user's guess
-    // const filter = (m) => m.author.id === message.author.id;
-    // const collector = message.channel.createMessageCollector(filter, {
-    //   time: 10000,
-    // });
-    // // if the user guesses the number, tell them they got it
-    // collector.on("collect", (m) => {
-    //   if (m.content === `guess ${randomNumber}`) {
-    //     message.reply("You got it!");
-    //     collector.stop();
-    //   }
-    // });
-    // // if the user doesn't guess the number in 5 tries, tell them they lost
-    // collector.on("end", (collected) => {
-    //   if (collected.size === 0) {
-    //     message.reply("You lost!");
-    //   }
-    // });
+  // ======================================================== //
+  // ======================================================== //
+  /*
+  ███╗   ██╗██╗   ██╗███╗   ███╗██████╗ ███████╗██████╗      █████╗ ██╗      ██████╗  ██████╗ 
+  ████╗  ██║██║   ██║████╗ ████║██╔══██╗██╔════╝██╔══██╗    ██╔══██╗██║     ██╔════╝ ██╔═══██╗
+  ██╔██╗ ██║██║   ██║██╔████╔██║██████╔╝█████╗  ██████╔╝    ███████║██║     ██║  ███╗██║   ██║
+  ██║╚██╗██║██║   ██║██║╚██╔╝██║██╔══██╗██╔══╝  ██╔══██╗    ██╔══██║██║     ██║   ██║██║   ██║
+  ██║ ╚████║╚██████╔╝██║ ╚═╝ ██║██████╔╝███████╗██║  ██║    ██║  ██║███████╗╚██████╔╝╚██████╔╝
+  ╚═╝  ╚═══╝ ╚═════╝ ╚═╝     ╚═╝╚═════╝ ╚══════╝╚═╝  ╚═╝    ╚═╝  ╚═╝╚══════╝ ╚═════╝  ╚═════╝ 
+  */
+  // ======================================================== //
+  // ======================================================== //
 
+  // "guess a number" game
+  if (
+    msg === "guess a number" ||
+    msg === "guess the number" ||
+    msg === "guess" ||
+    msg === "pick a number" ||
+    msg === "pick the number" ||
+    msg === "number"
+  ) {
+    // generate a random number between 1 and 100
     const randomNumber = Math.floor(Math.random() * 10) + 1;
+    // ask the user to guess the number
     message.reply(
-      `Guess a number between 1 and 10. You have 5 guesses. Type "guess" followed by your guess. Example: guess 5`
+      "Guess a number between 1 and 10. You have 5 guesses to get it right!\nType 'cancel' to cancel the game."
     );
+    // filter messages to see if they are from the person who guessed the number
     const filter = (m) => m.author.id === message.author.id;
+    // collect their messages
     const collector = message.channel.createMessageCollector(filter, {
       time: 10000,
     });
+    // keep track of how many guesses they have left
+    let guesses = 5;
+    // if they guess the number correctly, end the game
     collector.on("collect", (m) => {
-      if (m.content === `guess ${randomNumber}`) {
-        message.reply("Hey you got it! the number was " + randomNumber);
+      if (m.content == randomNumber) {
+        message.reply(`You got it! The number was ${randomNumber}! 🎉`);
         collector.stop();
       }
-    });
-    //  send message.reply("You lost!") if the user doesn't guess the number in 5 tries or after 10 seconds
-    collector.on("end", (collected) => {
-      if (collected.size === 0) {
-        message.reply("You lost!");
+      // if they guess the number incorrectly, let them know if they're too high or too low
+      // if they have 0 guesses left, end the game
+      else if (m.content != randomNumber) {
+        if (m.content > randomNumber) {
+          message.reply("Too high!");
+          guesses--;
+          if (guesses === 0) {
+            message.reply(
+              "Game over! You're out of guesses. The number was " +
+                randomNumber +
+                ". Better luck next time! 😅"
+            );
+            collector.stop();
+          }
+        } else if (m.content < randomNumber) {
+          message.reply("Too low!");
+          guesses--;
+          if (guesses === 0) {
+            message.reply(
+              "Game over! You're out of guesses. The number was " +
+                randomNumber +
+                ". Better luck next time! 😅"
+            );
+            collector.stop();
+          }
+        }
+      }
+      // if the user types "cancel", end the collector and inform the user
+      if (m.content === "cancel") {
+        collector.stop();
+        message.reply("Game cancelled.");
       }
     });
   }
+
+  // ======================================================== //
 
   // "inspirational quote" command
   if (msg === "inspirational quote" || msg === "quote") {
@@ -1330,6 +1332,30 @@ client.on("messageCreate", (message) => {
       });
   }
 
+  // WEBSCRAPER FOR RANDOM SENTENCE GENERATOR
+  // random sentence generator
+  if (
+    msg === "random sentence" ||
+    msg === "sentence" ||
+    msg === "sentence me" ||
+    msg === "randosentence"
+  ) {
+    axios
+      .get("https://fungenerators.com/random/sentence")
+      .then((res) => {
+        const $ = cheerio.load(res.data);
+        let sentence = $(
+          "body > section.moduler.wrapper_404 > div.container > div > div > div > h2"
+        ).text();
+        message.reply(
+          `I've scraped the web and found the sentence:\n\n _${sentence}_\n\nHope you like it!`
+        );
+      })
+      .catch((error) => {
+        console.log("ERROR : " + error);
+      });
+  }
+
   // ======================================================== //
   /*
   ██████╗ ██╗ ██████╗████████╗██╗ ██████╗ ███╗   ██╗ █████╗ ██████╗ ██╗   ██╗     █████╗ ██╗      ██████╗  ██████╗ 
@@ -1390,14 +1416,7 @@ client.on("messageCreate", (message) => {
 
   // ======================================================== //
   // ======================================================== //
-  /*
-  ██╗  ██╗ ██████╗ ██╗     ██╗██████╗  █████╗ ██╗   ██╗    ████████╗██████╗  █████╗  ██████╗██╗  ██╗███████╗██████╗ 
-  ██║  ██║██╔═══██╗██║     ██║██╔══██╗██╔══██╗╚██╗ ██╔╝    ╚══██╔══╝██╔══██╗██╔══██╗██╔════╝██║ ██╔╝██╔════╝██╔══██╗
-  ███████║██║   ██║██║     ██║██║  ██║███████║ ╚████╔╝        ██║   ██████╔╝███████║██║     █████╔╝ █████╗  ██████╔╝
-  ██╔══██║██║   ██║██║     ██║██║  ██║██╔══██║  ╚██╔╝         ██║   ██╔══██╗██╔══██║██║     ██╔═██╗ ██╔══╝  ██╔══██╗
-  ██║  ██║╚██████╔╝███████╗██║██████╔╝██║  ██║   ██║          ██║   ██║  ██║██║  ██║╚██████╗██║  ██╗███████╗██║  ██║
-  ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝╚═════╝ ╚═╝  ╚═╝   ╚═╝          ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝
-  */
+  // DATES
   // ======================================================== //
   // ======================================================== //
 
@@ -1487,6 +1506,19 @@ client.on("messageCreate", (message) => {
       })}`
     );
   }
+
+  // ======================================================== //
+  // ======================================================== //
+  /*
+  ██╗  ██╗ ██████╗ ██╗     ██╗██████╗  █████╗ ██╗   ██╗    ████████╗██████╗  █████╗  ██████╗██╗  ██╗███████╗██████╗ 
+  ██║  ██║██╔═══██╗██║     ██║██╔══██╗██╔══██╗╚██╗ ██╔╝    ╚══██╔══╝██╔══██╗██╔══██╗██╔════╝██║ ██╔╝██╔════╝██╔══██╗
+  ███████║██║   ██║██║     ██║██║  ██║███████║ ╚████╔╝        ██║   ██████╔╝███████║██║     █████╔╝ █████╗  ██████╔╝
+  ██╔══██║██║   ██║██║     ██║██║  ██║██╔══██║  ╚██╔╝         ██║   ██╔══██╗██╔══██║██║     ██╔═██╗ ██╔══╝  ██╔══██╗
+  ██║  ██║╚██████╔╝███████╗██║██████╔╝██║  ██║   ██║          ██║   ██║  ██║██║  ██║╚██████╗██║  ██╗███████╗██║  ██║
+  ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝╚═════╝ ╚═╝  ╚═╝   ╚═╝          ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝
+  */
+  // ======================================================== //
+  // ======================================================== //
 
   // "days until" command
   if (
@@ -1822,12 +1854,12 @@ client.on("messageCreate", (message) => {
 
     // ======================================================== //
     /*
-   ██████╗ ██████╗ ██╗   ██╗███╗   ██╗████████╗██████╗  ██████╗ ██╗    ██╗███╗   ██╗     █████╗ ██╗      ██████╗  ██████╗ 
-  ██╔════╝██╔═══██╗██║   ██║████╗  ██║╚══██╔══╝██╔══██╗██╔═══██╗██║    ██║████╗  ██║    ██╔══██╗██║     ██╔════╝ ██╔═══██╗
-  ██║     ██║   ██║██║   ██║██╔██╗ ██║   ██║   ██║  ██║██║   ██║██║ █╗ ██║██╔██╗ ██║    ███████║██║     ██║  ███╗██║   ██║
-  ██║     ██║   ██║██║   ██║██║╚██╗██║   ██║   ██║  ██║██║   ██║██║███╗██║██║╚██╗██║    ██╔══██║██║     ██║   ██║██║   ██║
-  ╚██████╗╚██████╔╝╚██████╔╝██║ ╚████║   ██║   ██████╔╝╚██████╔╝╚███╔███╔╝██║ ╚████║    ██║  ██║███████╗╚██████╔╝╚██████╔╝
-   ╚═════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝   ╚═╝   ╚═════╝  ╚═════╝  ╚══╝╚══╝ ╚═╝  ╚═══╝    ╚═╝  ╚═╝╚══════╝ ╚═════╝  ╚═════╝ 
+      ██████╗ ██████╗ ██╗   ██╗███╗   ██╗████████╗██████╗  ██████╗ ██╗    ██╗███╗   ██╗     █████╗ ██╗      ██████╗  ██████╗ 
+    ██╔════╝██╔═══██╗██║   ██║████╗  ██║╚══██╔══╝██╔══██╗██╔═══██╗██║    ██║████╗  ██║    ██╔══██╗██║     ██╔════╝ ██╔═══██╗
+    ██║     ██║   ██║██║   ██║██╔██╗ ██║   ██║   ██║  ██║██║   ██║██║ █╗ ██║██╔██╗ ██║    ███████║██║     ██║  ███╗██║   ██║
+    ██║     ██║   ██║██║   ██║██║╚██╗██║   ██║   ██║  ██║██║   ██║██║███╗██║██║╚██╗██║    ██╔══██║██║     ██║   ██║██║   ██║
+    ╚██████╗╚██████╔╝╚██████╔╝██║ ╚████║   ██║   ██████╔╝╚██████╔╝╚███╔███╔╝██║ ╚████║    ██║  ██║███████╗╚██████╔╝╚██████╔╝
+      ╚═════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝   ╚═╝   ╚═════╝  ╚═════╝  ╚══╝╚══╝ ╚═╝  ╚═══╝    ╚═╝  ╚═╝╚══════╝ ╚═════╝  ╚═════╝ 
     */
     // ======================================================== //
 
@@ -1877,12 +1909,12 @@ client.on("messageCreate", (message) => {
   // ======================================================== //
   // ======================================================== //
   /*
-████████╗██╗███╗   ███╗███████╗    ███████╗ ██████╗ ███╗   ██╗███████╗███████╗
-╚══██╔══╝██║████╗ ████║██╔════╝    ╚══███╔╝██╔═══██╗████╗  ██║██╔════╝██╔════╝
-   ██║   ██║██╔████╔██║█████╗        ███╔╝ ██║   ██║██╔██╗ ██║█████╗  ███████╗
-   ██║   ██║██║╚██╔╝██║██╔══╝       ███╔╝  ██║   ██║██║╚██╗██║██╔══╝  ╚════██║
-   ██║   ██║██║ ╚═╝ ██║███████╗    ███████╗╚██████╔╝██║ ╚████║███████╗███████║
-   ╚═╝   ╚═╝╚═╝     ╚═╝╚══════╝    ╚══════╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝╚══════╝
+  ████████╗██╗███╗   ███╗███████╗    ███████╗ ██████╗ ███╗   ██╗███████╗███████╗
+  ╚══██╔══╝██║████╗ ████║██╔════╝    ╚══███╔╝██╔═══██╗████╗  ██║██╔════╝██╔════╝
+     ██║   ██║██╔████╔██║█████╗        ███╔╝ ██║   ██║██╔██╗ ██║█████╗  ███████╗
+     ██║   ██║██║╚██╔╝██║██╔══╝       ███╔╝  ██║   ██║██║╚██╗██║██╔══╝  ╚════██║
+     ██║   ██║██║ ╚═╝ ██║███████╗    ███████╗╚██████╔╝██║ ╚████║███████╗███████║
+     ╚═╝   ╚═╝╚═╝     ╚═╝╚══════╝    ╚══════╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝╚══════╝
 */
   // ======================================================== //
   // ======================================================== //
