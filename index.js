@@ -1129,13 +1129,13 @@ client.on("messageCreate", (message) => {
   // ======================================================== //
 
   // "guess a number" game
+  // let gameRunning = false;
+
   if (
     msg === "guess a number" ||
     msg === "guess the number" ||
     msg === "guess" ||
-    msg === "pick a number" ||
-    msg === "pick the number" ||
-    msg === "number"
+    msg === "guessing game"
   ) {
     // generate a random number between 1 and 100
     const randomNumber = Math.floor(Math.random() * 10) + 1;
@@ -1143,12 +1143,21 @@ client.on("messageCreate", (message) => {
     message.reply(
       "Guess a number between 1 and 10. You have 5 guesses to get it right!\nType 'cancel' to cancel the game."
     );
+    // gameRunning = true;
+
+    // if game is already running, throw error
+    // if (gameRunning) {
+    //   message.reply("A game is already running!");
+    //   return;
+    // }
+
     // filter messages to see if they are from the person who guessed the number
     const filter = (m) => m.author.id === message.author.id;
     // collect their messages
     const collector = message.channel.createMessageCollector(filter, {
       time: 10000,
     });
+
     // keep track of how many guesses they have left
     let guesses = 5;
     // if they guess the number correctly, end the game
@@ -1156,6 +1165,7 @@ client.on("messageCreate", (message) => {
       if (m.content == randomNumber) {
         message.reply(`You got it! The number was ${randomNumber}! 🎉`);
         collector.stop();
+        // gameRunning = false;
       }
       // if they guess the number incorrectly, let them know if they're too high or too low
       // if they have 0 guesses left, end the game
@@ -1170,6 +1180,7 @@ client.on("messageCreate", (message) => {
                 ". Better luck next time! 😅"
             );
             collector.stop();
+            // gameRunning = false;
           }
         } else if (m.content < randomNumber) {
           message.reply("Too low!");
@@ -1181,12 +1192,14 @@ client.on("messageCreate", (message) => {
                 ". Better luck next time! 😅"
             );
             collector.stop();
+            // gameRunning = false;
           }
         }
       }
       // if the user types "cancel", end the collector and inform the user
       if (m.content === "cancel") {
         collector.stop();
+        // gameRunning = false;
         message.reply("Game cancelled.");
       }
     });
