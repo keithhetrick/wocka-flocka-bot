@@ -55,8 +55,8 @@ const client = new Client({
 // LOGIN CHECK
 
 client.on("ready", () => {
-  console.log(`Logged in as ${client.user.tag} 🚀🤖!`);
-  console.log("Wocka-Flocka is ready to rock-a rock-a!!!!");
+  console.log(`\nLogged in as ${client.user.tag} 🚀🤖!`);
+  console.log("\nWocka-Flocka is ready to rock-a rock-a!!!!\n");
 });
 
 client.on("messageDelete", (message) => {
@@ -1135,7 +1135,10 @@ client.on("messageCreate", (message) => {
     msg === "guess a number" ||
     msg === "guess the number" ||
     msg === "guess" ||
-    msg === "guessing game"
+    msg === "guessing game" ||
+    msg === "number game" ||
+    msg === "number guessing game" ||
+    msg === "guessing number game"
   ) {
     // generate a random number between 1 and 100
     const randomNumber = Math.floor(Math.random() * 10) + 1;
@@ -1171,8 +1174,8 @@ client.on("messageCreate", (message) => {
       // if they have 0 guesses left, end the game
       else if (m.content != randomNumber) {
         if (m.content > randomNumber) {
-          message.reply("Too high!");
           guesses--;
+          message.reply(`Too high! You have ${guesses} guesses left.`);
           if (guesses === 0) {
             message.reply(
               "Game over! You're out of guesses. The number was " +
@@ -1183,8 +1186,8 @@ client.on("messageCreate", (message) => {
             // gameRunning = false;
           }
         } else if (m.content < randomNumber) {
-          message.reply("Too low!");
           guesses--;
+          message.reply(`Too low! You have ${guesses} guesses left.`);
           if (guesses === 0) {
             message.reply(
               "Game over! You're out of guesses. The number was " +
